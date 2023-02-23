@@ -30,19 +30,19 @@ else:
 
 # Start streaming
 pipeline.start(config)
-
-
-for x in range(30):
+depth_frame_set={}
+color_frame_set={}
+for x in range(20):
         # Wait for a coherent pair of frames: depth and color
         frames = pipeline.wait_for_frames()
-        depth_frame = frames.get_depth_frame()
-        color_frame = frames.get_color_frame()
-        if not depth_frame or not color_frame:
+        depth_frame_set[x] = frames.get_depth_frame()
+        color_frame_set[x] = frames.get_color_frame()
+        if not depth_frame_set[x] or not color_frame_set[x]:
             continue
 
         # Convert images to numpy arrays
-        depth_image = np.asanyarray(depth_frame.get_data())
-        color_image = np.asanyarray(color_frame.get_data())
+        depth_image = np.asanyarray(depth_frame_set[x].get_data())
+        color_image = np.asanyarray(color_frame_set[x].get_data())
 
         # Apply colormap on depth image (image must be converted to 8-bit per pixel first)
         depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
@@ -66,3 +66,8 @@ for x in range(30):
 
     # Stop streaming
 pipeline.stop()
+
+
+f = open ("output.txt", "w")
+f.write( depth_frame_set[1])
+f.close()
