@@ -68,6 +68,6 @@ for x in range(20):
 pipeline.stop()
 
 
-f = open ("output.txt", "w")
+f = open ("./output.txt", "w")
 f.write( depth_frame_set[1])
 f.close()
