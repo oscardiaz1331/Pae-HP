@@ -15,9 +15,10 @@ PAE (HP) Spring 22-23.
 
     1. CALIBRAR 
        ANAR A LA POSICIÓ "HOME" (0,0)
-       ADQUIRIR DATA
+       
     
-    2. CONVERTIR DATOS/FORMATEAR
+    2. ADQUIRIR DATA
+        - CONVERTIR DATOS/FORMATEAR (si es necesario):
        - POSICIÓ
        - DISTANCIA
        - ANGLES
