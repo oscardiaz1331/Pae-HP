@@ -5,18 +5,16 @@ import cv2
 
 
 class Calibration:
+   
     def __init__ (self):
-        pass
+        self.pipeline = rs.pipeline()
+        self.config = rs.config()
 
-
-    def enable_stream():
-    # Configure depth and color streams
-        pipeline = rs.pipeline()
-        config = rs.config()
-
+    def enable_stream(self):
+    
         # Get device product line for setting a supporting resolution
-        pipeline_wrapper = rs.pipeline_wrapper(pipeline)
-        pipeline_profile = config.resolve(pipeline_wrapper)
+        pipeline_wrapper = rs.pipeline_wrapper(self.pipeline)
+        pipeline_profile = self.config.resolve(pipeline_wrapper)
         device = pipeline_profile.get_device()
         device_product_line = str(device.get_info(rs.camera_info.product_line))
 
@@ -29,24 +27,24 @@ class Calibration:
             print("The demo requires Depth camera with Color sensor")
             exit(0)
 
-        config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
+        self.config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
 
         if device_product_line == 'L500':
-            config.enable_stream(rs.stream.color, 960, 540, rs.format.bgr8, 30)
+            self.config.enable_stream(rs.stream.color, 960, 540, rs.format.bgr8, 30)
         else:
-            config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+            self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
         
-        return pipeline
+        
 
 
-    def calibrate (pipeline):
+    def calibrate (self):
     # Start streaming
-        pipeline.start(config)
+        self.pipeline.start(self.config)
         depth_frame_set={}
         color_frame_set={}
         for x in range(20):
                 # Wait for a coherent pair of frames: depth and color
-                frames = pipeline.wait_for_frames()
+                frames = self.pipeline.wait_for_frames()
                 depth_frame_set[x] = frames.get_depth_frame()
                 color_frame_set[x] = frames.get_color_frame()
                 if not depth_frame_set[x] or not color_frame_set[x]:
@@ -77,7 +75,7 @@ class Calibration:
 
 
             # Stop streaming
-        pipeline.stop()
+        self.pipeline.stop()
 
 
         f = open ("./output.txt", "w")

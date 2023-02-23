@@ -1,4 +1,4 @@
-from Classes.Calibraton import Calibration
+from DomainLayer.Classes.Calibraton import Calibration
 
 
 
@@ -8,8 +8,8 @@ class Construct_verification:
 
     
     def calibration():
-        pipeline = Calibration.enable_stream()
-        Calibration.calibrate(pipeline)
+        Calibration.enable_stream()
+        Calibration.calibrate()
 
         
 
