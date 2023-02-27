@@ -28,7 +28,8 @@ if device_product_line == 'L500':
 else:
     config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 
-config.enable_recrod_to_file("../recording.bag")
+config.enable_record_to_file("./recroding.bag")
+recorder= rs.recorder("./recroding.bag",device)
 # Start streaming
 pipeline.start(config)
 # rs.recorder() #Start recording
