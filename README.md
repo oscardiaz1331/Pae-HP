@@ -30,3 +30,9 @@ PAE (HP) Spring 22-23.
     5. VALIDACIÓ DADES
 
     6. PRESA DE DECISIONS  
+
+
+###### FORMAT EXPORT FRAMES I PLAYBACK ######
+
+    Els frames grabats es guarden en un fitxer .bag el qual ens permet reproduir-lo posteriorment
+    
