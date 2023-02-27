@@ -9,18 +9,18 @@ class Construct_verification:
         pass
 
     
-    def calibration():
+    def calibration(self):
         calibrate = Calibration()
         calibrate.enable_stream()
         calibrate.calibrate()
 
 
-    def capture_frame(frames, filename):
+    def capture_frame(self,frames, filename):
         frame_capture = Frame_Capture()
         frame_capture.get_and_configure_device()
         frame_capture.capture(frames, filename)
 
-    def show_files(filename):
+    def show_files(self, filename):
         show = Show_Files()
         show.enable_file(filename)
         show.show()

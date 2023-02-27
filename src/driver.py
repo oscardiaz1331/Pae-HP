@@ -4,4 +4,4 @@ print("Realsense object validator driver")
 
 verif = cr.Construct_verification()
 
-verif.capture_frame("prueba.bag")
+verif.capture_frame(100,'prueba')
