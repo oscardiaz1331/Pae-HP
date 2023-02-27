@@ -15,14 +15,14 @@ class Construct_verification:
         calibrate.calibrate()
 
 
-    def capture_frame():
-        frame_capture = Frame_Capture();
-        frame_capture.get_and_configure_device();
-        frame_capture.capture(150, "filename.bag")
+    def capture_frame(frames, filename):
+        frame_capture = Frame_Capture()
+        frame_capture.get_and_configure_device()
+        frame_capture.capture(frames, filename)
 
-    def show_files():
+    def show_files(filename):
         show = Show_Files()
-        show.enable_file("filename.bag")
+        show.enable_file(filename)
         show.show()
 
         
