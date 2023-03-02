@@ -20,10 +20,10 @@ class Construct_verification:
         frame_capture.get_and_configure_device()
         return frame_capture.capture(frames, filename)
 
-    def show_files(self, filename):
+    def show_files(self, frame,  filename):
         show = Show_Files()
         show.enable_file(filename)
-        show.show()
+        return show.show(frame)
 
         
 
