@@ -6,4 +6,5 @@ print("Realsense object validator driver")
 
 verif = cr.Construct_verification()
 
-verif.show_files(filesource+ "prueba.bag")
+dp, cl = verif.capture_frame(100, "gege.bag")
+print(dp)

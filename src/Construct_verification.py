@@ -18,7 +18,7 @@ class Construct_verification:
     def capture_frame(self,frames, filename):
         frame_capture = Frame_Capture()
         frame_capture.get_and_configure_device()
-        frame_capture.capture(frames, filename)
+        return frame_capture.capture(frames, filename)
 
     def show_files(self, filename):
         show = Show_Files()

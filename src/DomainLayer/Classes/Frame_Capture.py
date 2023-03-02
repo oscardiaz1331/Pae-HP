@@ -59,6 +59,10 @@ class Frame_Capture:
                 depth_image = np.asanyarray(depth_frame.get_data())
                 color_image = np.asanyarray(color_frame.get_data())
 
+                if(i==20):
+                    fin_depth_image = depth_image
+                    fin_color_image = color_image
+
                 # Apply colormap on depth image (image must be converted to 8-bit per pixel first)
                 depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
 
@@ -81,4 +85,5 @@ class Frame_Capture:
 
             # Stop streaming
             self.pipeline.stop()
+            return fin_depth_image,fin_color_image
             
