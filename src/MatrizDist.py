@@ -3,6 +3,7 @@ import cv2                                # state of the art computer vision alg
 import numpy as np                        # fundamental package for scientific computing
 import matplotlib.pyplot as plt           # 2D plotting library producing publication quality figures
 import pyrealsense2 as rs  
+import Construct_verification as cr
 
 # Setup:
 pipe = rs.pipeline()
@@ -38,47 +39,22 @@ for height in range (1, (depth_frame.get_height())):
                 
 maximo = max(max(fila) for fila in matrizDist)
 
-for height in range (1, (depth_frame.get_height())):
-        for width in range (1, (depth_frame.get_width())):
-                matrizDist[width][height]=depth_frame.get_distance(width,height)
-                matrizBN[width][height]=int(math.trunc(depth_frame.get_distance(width,height)*256/maximo-1))
+#for height in range (1, (depth_frame.get_height())):
+#        for width in range (1, (depth_frame.get_width())):
+#                matrizDist[width][height]=depth_frame.get_distance(width,height)
+#                matrizBN[width][height]=int(math.trunc(depth_frame.get_distance(width,height)*256/maximo-1))
    
 
 print(matrizDist)
 print(maximo) 
 
-#for x in range(30):
-        # Wait for a coherent pair of frames: depth and color
-        #frames = pipe.wait_for_frames()
 
 
-if not depth_frame:
-       print("no depth")
-
-if not color_frame:
-       print("no color")
+verif = cr.Construct_verification()
+dp,cl = verif.show_files(20, "../recordings/recordings/recording1.bag")
+print(dp,cl)
 
 
-# Convert images to numpy arrays
-depth_image = np.asanyarray(depth_frame.get_data())
-color_image = np.asanyarray(color_frame.get_data())
-
-# Apply colormap on depth image (image must be converted to 8-bit per pixel first)
-depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
-
-depth_colormap_dim = depth_colormap.shape
-color_colormap_dim = color_image.shape
-
-# If depth and color resolutions are different, resize color image to match depth image for display
-if depth_colormap_dim != color_colormap_dim:
-    resized_color_image = cv2.resize(color_image, dsize=(depth_colormap_dim[1], depth_colormap_dim[0]), interpolation=cv2.INTER_AREA)
-    images = np.hstack((resized_color_image, depth_colormap))
-else:
-    images = np.hstack((color_image, depth_colormap))
-
-# Show images
-cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
-cv2.imshow('RealSense', images)
 
 print(depth_frame)
 
