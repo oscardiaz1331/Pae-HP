@@ -1,4 +1,4 @@
-import 
+import Construct_verification as cr
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt 
@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 
 print("Realsense object validator driver")
 
-[color_frame, depth_frame]=cr.Show_Files("recording2.bag")
+cv = cr.Construct_verification()
+depth_frame, color_frame=cv.show_files(20,"./src/DataLayer/recording2.bag")
 
 color_data = np.asanyarray(color_frame.get_data())
 depth_data = np.asanyarray(depth_frame.get_data())
@@ -49,5 +50,3 @@ cv2.putText(crop_img, className,
             cv2.FONT_HERSHEY_COMPLEX, 0.5, (255,255,255))
 
 plt.imshow(crop_img)
-
-                           
