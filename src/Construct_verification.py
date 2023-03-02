@@ -18,12 +18,12 @@ class Construct_verification:
     def capture_frame(self,frames, filename):
         frame_capture = Frame_Capture()
         frame_capture.get_and_configure_device()
-        frame_capture.capture(frames, filename)
+        return frame_capture.capture(frames, filename)
 
-    def show_files(self, filename):
+    def show_files(self, frame,  filename):
         show = Show_Files()
         show.enable_file(filename)
-        show.show()
+        return show.show(frame)
 
         
 

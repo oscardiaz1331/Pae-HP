@@ -17,27 +17,32 @@ class Show_Files:
     def enable_file (self, file):
          
 
-        self.config.enable_device_from_file(self.config , file)
-        self.enable_stream(rs.stream.depth, rs.format.z16, 30)
-        profile = self.pipe.start(self.config)
+        rs.config.enable_device_from_file(self.config , file)
+        self.config.enable_stream(rs.stream.depth, rs.format.z16, 30)
+        profile = self.pipeline.start(self.config)
 
 
 
-    def show (self):
+    def show (self, frame):
 
         cv2.namedWindow("Depth Stream", cv2.WINDOW_AUTOSIZE)
   
         # Create colorizer object
         colorizer = rs.colorizer()
-
+        iter = 0
             # Streaming loop
         while True:
+                iter = iter + 1
                 # Get frameset of depth
-                frames = self.pipe.wait_for_frames()
+                frames = self.pipeline.wait_for_frames()
 
                 # Get depth frame
                 depth_frame = frames.get_depth_frame()
+                color_frame = frames.get_color_frame()
 
+                if(iter == frame):
+                     final_depth = depth_frame
+                     final_rgb = color_frame
                 # Colorize depth frame to jet colormap
                 depth_color_frame = colorizer.colorize(depth_frame)
 
@@ -50,4 +55,4 @@ class Show_Files:
                 # if pressed escape exit program
                 if key == 27:
                     cv2.destroyAllWindows()
-                    break
+                    return final_depth, final_rgb

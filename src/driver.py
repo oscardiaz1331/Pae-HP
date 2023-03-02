@@ -1,7 +1,10 @@
 import Construct_verification as cr
+filesource = "./src/DataLayer/"
+
 
 print("Realsense object validator driver")
 
 verif = cr.Construct_verification()
 
-verif.capture_frame(100,'prueba.bag')
+dp,cl = verif.show_files(20, filesource + "gege.bag")
+print(dp)
