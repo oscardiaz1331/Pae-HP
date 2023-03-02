@@ -17,9 +17,9 @@ class Show_Files:
     def enable_file (self, file):
          
 
-        self.config.enable_device_from_file(self.config , file)
-        self.enable_stream(rs.stream.depth, rs.format.z16, 30)
-        profile = self.pipe.start(self.config)
+        rs.config.enable_device_from_file(self.config , file)
+        self.config.enable_stream(rs.stream.depth, rs.format.z16, 30)
+        profile = self.pipeline.start(self.config)
 
 
 
@@ -33,7 +33,7 @@ class Show_Files:
             # Streaming loop
         while True:
                 # Get frameset of depth
-                frames = self.pipe.wait_for_frames()
+                frames = self.pipeline.wait_for_frames()
 
                 # Get depth frame
                 depth_frame = frames.get_depth_frame()
