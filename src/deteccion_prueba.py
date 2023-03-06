@@ -21,7 +21,7 @@ resized_image = cv2.resize(color_data, (round(expected * aspect), expected))
 crop_start = round(expected * (aspect - 1) / 2)
 crop_img = resized_image[0:expected, crop_start:crop_start+expected]
 
-net = cv2.dnn.readNetFromCaffe("../MobileNetSSD_deploy.prototxt", "../MobileNetSSD_deploy.caffemodel")
+net = cv2.dnn.readNetFromCaffe("./src/DataLayer/MobileNetSSD_deploy.prototxt", "./src/DataLayer/MobileNetSSD_deploy.caffemodel")
 inScaleFactor = 0.007843
 meanVal       = 127.53
 classNames = ("background", "aeroplane", "bicycle", "bird", "boat",
