@@ -94,4 +94,4 @@ imagen_BW = cv2.normalize(matrizBN, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_
 
 cv2.imshow('Imagen en byn',matrizBN)
 
-
+#separar la funcion de representacion, la funcion que hace la matriz de distancias y el kmeans
