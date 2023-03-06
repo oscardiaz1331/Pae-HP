@@ -1,6 +1,6 @@
-from DomainLayer.Classes.Calibraton import Calibration
-from DomainLayer.Classes.Frame_Capture import Frame_Capture
-from DomainLayer.Classes.Show_Files import Show_Files
+from DomainLayer.Calibraton import Calibration
+from DomainLayer.Frame_Capture import Frame_Capture
+from DomainLayer.Show_Files import Show_Files
 
 
 
