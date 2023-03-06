@@ -1,6 +1,6 @@
-from Calibraton import Calibration
-from Frame_Capture import Frame_Capture
-from Show_Files import Show_Files
+from .Calibraton import Calibration
+from .frameCapture import Frame_Capture
+from .showFiles import Show_Files
 
 
 
