@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='realsenseverif',
-    packages=find_packages(),
+    packages=find_packages(include=['realsenseverif']),
     version='0.1.0',
     install_requires = [
     'pyrealsense2',

@@ -40,7 +40,7 @@ class Frame_Capture:
 
     def capture (self, frames ,filename):
 
-        self.config.enable_record_to_file("./src/DataLayer/"+filename)
+        self.config.enable_record_to_file(filename)
         
         # Start streaming
         self.pipeline.start(self.config)
