@@ -45,13 +45,13 @@ class Show_Files:
                      final_depth = depth_frame
                      final_rgb = color_frame
                 # Colorize depth frame to jet colormap
-                depth_color_frame = colorizer.colorize(depth_frame)
+                     depth_color_frame = colorizer.colorize(depth_frame)
 
                 # Convert depth_frame to numpy array to render image in opencv
-                depth_color_image = np.asanyarray(depth_color_frame.get_data())
+                     depth_color_image = np.asanyarray(depth_color_frame.get_data())
 
                 # Render image in opencv window
-                cv2.imshow("Depth Stream", depth_color_image)
+                     cv2.imshow("Depth Stream", depth_color_image)
                 key = cv2.waitKey(1)
                 # if pressed escape exit program
                 if key == 27:
