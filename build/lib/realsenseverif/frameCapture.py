@@ -59,7 +59,7 @@ class Frame_Capture:
                 depth_image = np.asanyarray(depth_frame.get_data())
                 color_image = np.asanyarray(color_frame.get_data())
 
-                if(i==20):
+                if(i==10):
                     fin_depth_image = depth_image
                     fin_color_image = color_image
 

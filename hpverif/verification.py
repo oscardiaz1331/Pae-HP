@@ -4,7 +4,7 @@ from .showFiles import Show_Files
 
 
 
-class Construct_verification:
+class Verification:
     def __init__ (self):
         pass
 
