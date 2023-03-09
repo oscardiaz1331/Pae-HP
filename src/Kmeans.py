@@ -5,9 +5,9 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from scipy.ndimage import label
 
-def Kmeans(matrizDist):    
+def Kmeans(matrizDist,k):    
     vector = np.array(matrizDist).reshape(-1, 1)
-    kmeans=KMeans(n_clusters=5,n_init="auto")
+    kmeans=KMeans(n_clusters=k+1,n_init="auto")
     kmeans.fit(vector)
 
     labels = kmeans.labels_.reshape(len(matrizDist), len(matrizDist[0]))

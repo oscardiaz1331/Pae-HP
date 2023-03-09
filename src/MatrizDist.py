@@ -10,7 +10,8 @@ def MatrizDist(depth_frame):
         matrizDist=[[0 for i in range(depth_frame.get_height())] for j in range(depth_frame.get_width())]
         for height in range (1, (depth_frame.get_height())):
                 for width in range (1, (depth_frame.get_width())):
-                        matrizDist[width][height]=depth_frame.get_distance(width,height)
+                        if(depth_frame.get_distance(width,height) > 0.30):
+                                matrizDist[width][height]=depth_frame.get_distance(width,height)
         return matrizDist
         #matrizBN = np.zeros(((depth_frame.get_width(), depth_frame.get_height())))
         # maximo = max(max(fila) for fila in matrizDist)
