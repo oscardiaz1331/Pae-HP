@@ -1,6 +1,7 @@
-from .Calibraton import Calibration
-from .frameCapture import Frame_Capture
-from .showFiles import Show_Files
+from Calibraton import Calibration
+from frameCapture import Frame_Capture
+from showFiles import Show_Files
+from matrixDist import MatrixDiagnose
 
 
 
@@ -24,6 +25,14 @@ class Verification:
         show = Show_Files()
         show.enable_file(filename)
         return show.show(frame)
+    
+    def MatrixDiagn (self, depthFrame):
+        matrixD = MatrixDiagnose(depthFrame)
+        finalMatrix = matrixD.MatrizDist(depthFrame)
+        return finalMatrix
+        #print(finalMatrix)
+
+
 
         
 

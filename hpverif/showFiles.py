@@ -41,7 +41,7 @@ class Show_Files:
                 depth_frame = frames.get_depth_frame()
                 color_frame = frames.get_color_frame()
 
-                if(iter == frame):
+                if(iter == frame-6):
                      final_depth = depth_frame
                      final_rgb = color_frame
                 # Colorize depth frame to jet colormap
