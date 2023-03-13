@@ -1,16 +1,18 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='hpverif',
+    name='siteprintverif',
     packages=find_packages(include=['hpverif']),
-    version='0.1.3',
+    version='1.6.3',
     install_requires = [
     'pyrealsense2',
     'numpy',
     'opencv-python',
-    'matplotlib'
+    'matplotlib',
+    'scipy',
+    'sklearn'
     ],
     description='Hp construction verification library PAE 2023',
-    author='Alejandro Amat',
+    author='Telecos PAE 2023 Students',
     license='MIT',
 )
