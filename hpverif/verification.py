@@ -35,12 +35,3 @@ class Verification:
         km = Kmeans()
         km.CalculateKMeans(matrix, k)
         
-
-
-
-        
-
-
-
-
-
