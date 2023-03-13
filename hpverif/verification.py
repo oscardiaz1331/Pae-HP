@@ -2,7 +2,7 @@ from Calibraton import Calibration
 from frameCapture import Frame_Capture
 from showFiles import Show_Files
 from matrixDist import MatrixDiagnose
-
+from Kmeans import Kmeans
 
 
 class Verification:
@@ -26,11 +26,15 @@ class Verification:
         show.enable_file(filename)
         return show.show(frame)
     
-    def MatrixDiagn (self, depthFrame):
+    def matrixDiagn (self, depthFrame):
         matrixD = MatrixDiagnose(depthFrame)
         finalMatrix = matrixD.MatrizDist(depthFrame)
         return finalMatrix
-        #print(finalMatrix)
+    
+    def kmeans (self,matrix, k):
+        km = Kmeans()
+        km.CalculateKMeans(matrix, k)
+        
 
 
 

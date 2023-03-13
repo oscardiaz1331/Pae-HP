@@ -29,7 +29,7 @@ class MatrixDiagnose:
                             to_change.append((width, height))
                             self.total = self.total +1
                             #print(width,height)
-                        matrizDist[width][height]=depth_frame.get_distance(width,height)*10
+                        matrizDist[width][height]=depth_frame.get_distance(width,height)*100
 
             a = {}     
             vis = [False for i in range(0, len(to_change))]
@@ -44,7 +44,7 @@ class MatrixDiagnose:
                     for vad in to_change:
                         if(vis[j]==False):
                             
-                            if(abs(values[0] + values[1] - vad[0] - vad [1]) < 35):
+                            if(abs(values[0] + values[1] - vad[0] - vad [1]) < 3):
                                 vis[j]= True
                                 d.append(vad)
                         j = j+1
