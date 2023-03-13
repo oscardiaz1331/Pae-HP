@@ -44,7 +44,7 @@ detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
 detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
 # Number of objects detected
 num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-# code source of tensorflow model loading: https://www.geeksforgeeks.org/ml-training-image-classifier-using-tensorflow-object-detection-api/
+
 
 while True:
     frames = pipeline.wait_for_frames()
@@ -77,7 +77,7 @@ while True:
         box = boxes[idx]
         print(" [DEBUG] class : ", class_, "idx : ", idx, "num : ", num)
 
-        if score > 0.4   : 
+        if score > 0.2   : 
             left = box[1] * W
             top = box[0] * H
             right = box[3] * W
