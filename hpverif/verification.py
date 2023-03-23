@@ -3,7 +3,7 @@ from frameCapture import Frame_Capture
 from showFiles import Show_Files
 from matrixDist import MatrixDiagnose
 from Kmeans import Kmeans
-
+from frameCapturePLY import Frame_Capture_PLY
 
 class Verification:
     def __init__ (self):
@@ -20,6 +20,11 @@ class Verification:
         frame_capture = Frame_Capture()
         frame_capture.get_and_configure_device()
         return frame_capture.capture(frames, filename, high)
+    
+    def capture_frame_ply(self,filename, high):
+        frame_capture = Frame_Capture_PLY()
+        frame_capture.get_and_configure_device()
+        frame_capture.capture(filename, high)
 
     def show_files(self, frame,  filename):
         show = Show_Files()
