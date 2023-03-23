@@ -1,9 +1,13 @@
 import verification as v
-
+import pyrealsense2 as rs
+import CenterAverage as ca
 
 
 verif = v.Verification()
-dp,cp = verif.show_files(15, "../recordings/recordings/recording4.bag")
+dp,cp = verif.capture_frame(130,"MedAcc.bag",4)
 
-ms = verif.matrixDiagn(dp)
-verif.kmeans(ms, 2)
+#s = verif.matrixDiagn(dp)
+
+
+
+

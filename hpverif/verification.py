@@ -16,10 +16,10 @@ class Verification:
         calibrate.calibrate()
 
 
-    def capture_frame(self,frames, filename):
+    def capture_frame(self,frames, filename, high):
         frame_capture = Frame_Capture()
         frame_capture.get_and_configure_device()
-        return frame_capture.capture(frames, filename)
+        return frame_capture.capture(frames, filename, high)
 
     def show_files(self, frame,  filename):
         show = Show_Files()
