@@ -11,6 +11,7 @@ class Show_Files:
     def __init__ (self):
         self.pipeline = rs.pipeline()
         self.config = rs.config()
+        self.pc = rs.pointcloud()
 
 
 
@@ -72,4 +73,4 @@ class Show_Files:
                 # if pressed escape exit program
                 if key == 27:
                     cv2.destroyAllWindows()
-                    return final_depth, final_rgb
+                    return final_depth, final_rgb, self.pc
