@@ -1,5 +1,6 @@
 import cv2                                # state of the art computer vision algorithms library
 import numpy as np                        # fundamental package for scientific computing
+import open3d as o3d
 import pyrealsense2 as rs  
 
 
@@ -21,6 +22,7 @@ class Show_Files:
         rs.config.enable_device_from_file(self.config , file)
         self.config.enable_stream(rs.stream.depth, rs.format.z16, 30)
         self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+        self.config.enable_device_from_file("MedAccuracy.json", repeat_playback=False)
         profile = self.pipeline.start(self.config)
 
 
@@ -29,6 +31,9 @@ class Show_Files:
 
         cv2.namedWindow("Depth Stream", cv2.WINDOW_AUTOSIZE)
   
+        pointcloud=rs.pointcloud()
+       
+
         # Create colorizer object
         colorizer = rs.colorizer()
         iter = 0
@@ -42,9 +47,20 @@ class Show_Files:
                 depth_frame = frames.get_depth_frame()
                 color_frame = frames.get_color_frame()
 
+                #points = pointcloud.calculate(depth_frame)
+
+                #verts = np.asarray(points.get_vertices())
+                #rgbs = np.asarray(color_frame.get_data())
+                #pcd = o3d.geometry.PointCloud()
+                #pcd.points = o3d.utility.Vector3dVector(verts)
+                #pcd.colors = o3d.utility.Vector3dVector(rgbs)
+
+                 # Visualizar el pointcloud
+                #o3d.visualization.draw_geometries([pcd])
+
                 if(iter == frame-6):
                      final_depth = depth_frame
-                     final_rgb = color_frame
+                     final_rgb = color_frame 
                 # Colorize depth frame to jet colormap
                 depth_color_frame = colorizer.colorize(depth_frame)
 
