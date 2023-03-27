@@ -22,7 +22,7 @@ class Show_Files:
         rs.config.enable_device_from_file(self.config , file)
         self.config.enable_stream(rs.stream.depth, rs.format.z16, 30)
         self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
-        self.config.enable_device_from_file("MedAccuracy.json", repeat_playback=False)
+        
         profile = self.pipeline.start(self.config)
 
 
