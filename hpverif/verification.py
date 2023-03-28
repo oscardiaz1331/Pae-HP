@@ -1,9 +1,10 @@
 from Calibraton import Calibration
 from frameCapture import Frame_Capture
 from showFiles import Show_Files
-from matrixDist import MatrixDiagnose
 from Kmeans import Kmeans
 from frameCapturePLY import Frame_Capture_PLY
+from pointCloud import PointCloud
+from matrixDist import MatrixDiagnose
 
 class Verification:
     def __init__ (self):
@@ -31,12 +32,13 @@ class Verification:
         show.enable_file(filename)
         return show.show(frame)
     
-    def matrixDiagn (self, depthFrame):
-        matrixD = MatrixDiagnose(depthFrame)
-        finalMatrix = matrixD.MatrizDist(depthFrame)
-        return finalMatrix
-    
     def kmeans (self,matrix, k):
         km = Kmeans()
         km.CalculateKMeans(matrix, k)
+    
+    def PointCloud (self, dp, filename):
+        pc = PointCloud()
+        matrixD = MatrixDiagnose(dp)
+        depth_matrix = matrixD.MatrizDist(dp)
+        pc.createPointCloud(depth_matrix,filename)
         

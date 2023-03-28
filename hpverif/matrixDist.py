@@ -31,6 +31,7 @@ class MatrixDiagnose:
                             #print(width,height)
                         matrizDist[width][height]=depth_frame.get_distance(width,height)*100
 
+            return matrizDist
             a = {}     
             vis = [False for i in range(0, len(to_change))]
             
