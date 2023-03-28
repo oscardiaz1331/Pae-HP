@@ -9,7 +9,7 @@ import numpy as np
 
 
 verif = v.Verification()
-dp,dc,pc = verif.show_files(50, "./prueba_estatica3.bag")
+dp,dc,pc = verif.show_files(50, "./recording3.bag")
 
 fm = verif.matrixDiagn(dp)
 
@@ -37,6 +37,10 @@ im = o3d.geometry.PointCloud.create_from_depth_image(depth_o3d,intrinsic)
 
 o3d.visualization.draw_geometries([im])
 #s = verif.matrixDiagn(dp)
+
+o3d.io.write_point_cloud("./prueba.ply", im)
+
+
 
 
 
