@@ -31,18 +31,18 @@ class PointCloud:
         depth_colormap = cv2.applyColorMap(depth_frame_norm, cv2.COLORMAP_JET)
 
         # Save the depth map as a PNG image
-        cv2.imwrite(filename+'.png', depth_colormap)
+        cv2.imwrite("./"+filename + "/"+filename+'.png', depth_colormap)
 
-        depth_image = cv2.imread("./depth_map.png",cv2.IMREAD_ANYDEPTH)
+        depth_image = cv2.imread("./"+filename + "/"+filename+'.png',cv2.IMREAD_ANYDEPTH)
         print(depth_image)
         hole_mask = depth_image == 14
-        cv2.imwrite(filename+'_mask.png', hole_mask.astype(np.uint8)*255)
+        cv2.imwrite("./"+filename + "/"+filename+'_mask.png', hole_mask.astype(np.uint8)*255)
 
         # Apply the inpainting algorithm
         filled_depth = cv2.inpaint(depth_image, hole_mask.astype(np.uint8), 5, cv2.INPAINT_TELEA)
 
         # Save the filled depth frame
-        cv2.imwrite(filename+ '_filled.png', filled_depth)
+        cv2.imwrite("./"+filename + "/"+filename+ '_filled.png', filled_depth)
 
         depth_image = filled_depth.astype(np.uint16)
         depth_o3d = o3d.geometry.Image(depth_image)
@@ -55,7 +55,7 @@ class PointCloud:
         o3d.visualization.draw_geometries([im])
         #s = verif.matrixDiagn(dp)
 
-        o3d.io.write_point_cloud(filename+".ply", im)
+        o3d.io.write_point_cloud("./"+filename + "/"+filename+".ply", im)
 
 
 

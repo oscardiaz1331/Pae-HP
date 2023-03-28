@@ -5,6 +5,6 @@ import verification  as v
 verif = v.Verification()
 
 
-dp,dc,p = verif.show_files(20,"./recording3.bag")
+dp,dc,p = verif.show_files(26,"./recording4.bag")
 
-verif.PointCloud(dp,"alex")
+verif.PointCloud(dp,"imagen_columna")
