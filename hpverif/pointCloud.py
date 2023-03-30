@@ -1,11 +1,6 @@
-
-import verification as v
-import pyrealsense2 as rs
-import CenterAverage as ca
 import open3d as o3d
 import cv2
 import numpy as np
-import matrixDist as MatrixDiagnose
 import os 
 
 class PointCloud:

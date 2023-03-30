@@ -3,6 +3,7 @@ import verification  as v
 
 
 verif = v.Verification()
-dp,dc,p = verif.show_files(26,"prueba_estatica2.bag")
-verif.PointCloud(dp,"imagen_columna")
-verif.Segmentation("./imagen_columna/imagen_columna.ply")
+dp,dc = verif.capture_frame(100, "gg.bag", 0)
+dp,dc,p = verif.show_files(26,"gg.bag")
+verif.PointCloud(dp,"gg")
+verif.Segmentation("./gg/gg.ply")
