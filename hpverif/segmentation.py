@@ -37,16 +37,16 @@ class Segmentation:
             labels = np.array(
                 self.pcd.cluster_dbscan(eps=0.0018, min_points=50, print_progress=True)) # con imagenes donde objeto tiene depth parecido eps=0.0018 , y cuando no  eps=0.003
 
-        max_label = self.labels.max()
+        max_label = labels.max()
         print(f"point cloud has {max_label + 1} clusters")
-        colors = plt.get_cmap("tab20")(self.labels / (max_label if max_label > 0 else 1))
-        colors[self.labels < 0] = 0
+        colors = plt.get_cmap("tab20")(labels / (max_label if max_label > 0 else 1))
+        colors[labels < 0] = 0
         self.pcd.colors = o3d.utility.Vector3dVector(colors[:, :3])
         o3d.visualization.draw_geometries([self.pcd])
      
         #Buscamos la region que nos interesa
         target_label= 0
-        selected_indices = np.where(self.labels == target_label)[0]
+        selected_indices = np.where(labels == target_label)[0]
         selected_pcd = self.pcd.select_by_index(selected_indices)
         max_pcd= selected_pcd
         max2_pcd = selected_pcd
