@@ -24,6 +24,14 @@ class Segmentation:
         o3d.visualization.draw_geometries([inlier_cloud, outlier_cloud])  
         self.pcd = outlier_cloud
 
+        plane_model, inliers = self.pcd.segment_plane(distance_threshold=0.01, ransac_n=3,num_iterations=1000)
+        inlier_cloud = self.pcd.select_by_index(inliers)
+        inlier_cloud.paint_uniform_color([1.0, 0, 0])
+        outlier_cloud = self.pcd.select_by_index(inliers, invert=True)     
+        o3d.visualization.draw_geometries([inlier_cloud])
+        o3d.visualization.draw_geometries([outlier_cloud])
+        self.pcd = outlier_cloud
+
         #Ahora segmentacion con DBSCAN
 
         
