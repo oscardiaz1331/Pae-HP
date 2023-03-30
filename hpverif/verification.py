@@ -5,6 +5,7 @@ from Kmeans import Kmeans
 from frameCapturePLY import Frame_Capture_PLY
 from pointCloud import PointCloud
 from matrixDist import MatrixDiagnose
+from segmentation import Segmentation
 
 class Verification:
     def __init__ (self):
@@ -41,4 +42,9 @@ class Verification:
         matrixD = MatrixDiagnose(dp)
         depth_matrix = matrixD.MatrizDist(dp)
         pc.createPointCloud(depth_matrix,filename)
+    
+    def Segmentation (self, filename ):
+        seg = Segmentation(filename)
+        seg.removeBackgorund()
+        return seg.segmentation()
         
