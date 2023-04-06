@@ -25,6 +25,7 @@ class MatrixDiagnose:
             matrizDist=[[0 for i in range(self.height)] for j in range(self.width)]
             for height in range (0, (self.height)):
                     for width in range (0, (self.width)):
+                        
                         if (depth_frame.get_distance(width,height) == 0):
                             to_change.append((width, height))
                             self.total = self.total +1
