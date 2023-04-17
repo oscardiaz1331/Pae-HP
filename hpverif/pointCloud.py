@@ -78,7 +78,7 @@ class PointCloud:
     
         #s = verif.matrixDiagn(dp)
 
-        o3d.io.write_point_cloud("./"+filename + "/"+filename+".ply", im)
+        o3d.io.write_point_cloud("./"+filename + "/"+filename+".ply", pcd_o3d)
 
 
 
