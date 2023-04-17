@@ -41,8 +41,8 @@ class Verification:
         return pc.createPointCloud(0.001*np.asanyarray(dp.get_data()),filename)
         
     
-    def Segmentation (self, filename ):
-        seg = Segmentation(filename)
+    def Segmentation (self, filename, min, max ):
+        seg = Segmentation(filename,min,max)
         seg.removeBackgorund()
-        return seg.segmentation()
+        seg.segmentation()
         

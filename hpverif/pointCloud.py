@@ -21,13 +21,13 @@ class PointCloud:
 
         # Load the depth frame as a 16-bit grayscale image
         depth_image = np.array(depthframe)
-
+        height, width = depth_image.shape
         min =  np.min(depth_image)
         max =  np.max(depth_image)
         # Normalize the depth values between 0 and 255
-        print (depth_image[200][200])
+        print(height,width)
         depth_frame_norm = (((depth_image - min) / max)*255)
-        print (depth_frame_norm [200][200])
+        print (depth_image [300][560])
         # Convert the depth frame to a color map
         
 
@@ -52,7 +52,7 @@ class PointCloud:
 '''
        # print(depth_o3d)
         depth_image = iio.imread("./"+filename + "/"+filename+ '.png')
-        print (depth_image[200][200])
+        
         
         '''
         # Create a depth image from the numpy array
@@ -74,10 +74,21 @@ class PointCloud:
                 x = (j - CX_DEPTH) * z / FX_DEPTH
                 y = (i - CY_DEPTH) * z / FY_DEPTH
                 pcd.append([x, y, z])
-                 
-        for i in range (200):
-             pcd.append([0,0,i])
-       
+        '''        
+        for i in range (100):
+             k=i
+             
+             if (i<200):
+                
+                pcd.append([0, 0, 2*i])
+             for j in range(100):
+                 t=j
+                 if(i%2):
+                     k= i*(-1)
+                 if(j%2):
+                     t= j*(-1)
+                 pcd.append([k, t, 0])
+       '''
 
         pcd_o3d = o3d.geometry.PointCloud()  # create point cloud object
         pcd_o3d.points = o3d.utility.Vector3dVector(pcd)  # set pcd_np as the point cloud points
