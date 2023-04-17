@@ -26,7 +26,7 @@ class PointCloud:
         max =  np.max(depth_image)
         # Normalize the depth values between 0 and 255
         print (depth_image[200][200])
-        depth_frame_norm = (((depth_image - min) / max)*1024)
+        depth_frame_norm = (((depth_image - min) / max)*255)
         print (depth_frame_norm [200][200])
         # Convert the depth frame to a color map
         
@@ -51,7 +51,7 @@ class PointCloud:
         #depth_o3d = o3d.geometry.Image(depth_image)
 
        # print(depth_o3d)
-        depth_image = iio.imread("./"+filename + "/"+filename+ 'png')
+        depth_image = iio.imread("./"+filename + "/"+filename+ '.png')
         print (depth_image[200][200])
       
         '''

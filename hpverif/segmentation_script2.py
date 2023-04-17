@@ -9,7 +9,7 @@ import CenterAverage as ca
 
 
 
-pcd = o3d.io.read_point_cloud("recording3/recording3.ply")
+pcd = o3d.io.read_point_cloud("prueba_estatica3/prueba_estatica3.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
 #o3d.visualization.draw_geometries([pcd]) 
 
@@ -19,24 +19,16 @@ o3d.visualization.draw_geometries([pcd])
 
 #Empezamos probando segmentacion por planos
 
-plane_model, inliers = pcd.segment_plane(distance_threshold=3, ransac_n=3,num_iterations=1000) #0.01. El q funcionaba bien era 0.008
+plane_model, inliers = pcd.segment_plane(distance_threshold=3.5, ransac_n=3,num_iterations=1000) #0.01. El q funcionaba bien era 0.008
 inlier_cloud = pcd.select_by_index(inliers)
 inlier_cloud.paint_uniform_color([1.0, 0, 0])
 outlier_cloud = pcd.select_by_index(inliers, invert=True)     
 o3d.visualization.draw_geometries([inlier_cloud, outlier_cloud])  
 pcd = outlier_cloud
 
-depth_values_pared= np.asarray(inlier_cloud.points)[:,2] 
-print("mean: " + str(np.mean(depth_values_pared)))
+# Podriamos mirar a partir de la inclinacion del plano cde la pared(que se detecta bien en todos los casos)para saber que aproach utilizar. Si estamos en caso de todo recto- dos segmentaciones de planos. Si caso inclinado 1 plano 1 dbscan
 
-depth_values_pared2= np.asarray(inlier_cloud.points)[:,1] 
-print("mean: " + str(np.mean(depth_values_pared2)))
-
-depth_values_pared3= np.asarray(inlier_cloud.points)[:,0] 
-print("mean: " + str(np.mean(depth_values_pared3)))
-
-'''
-plane_model, inliers = pcd.segment_plane(distance_threshold=0.001, ransac_n=3,num_iterations=1000) #0.02
+plane_model, inliers = pcd.segment_plane(distance_threshold=2.8, ransac_n=3,num_iterations=1000) #2.8
 inlier_cloud = pcd.select_by_index(inliers)
 outlier_cloud = pcd.select_by_index(inliers, invert=True) 
 inlier_cloud.paint_uniform_color([1.0, 0, 0])
@@ -44,7 +36,7 @@ outlier_cloud.paint_uniform_color([1.0, 0, 0])
 o3d.visualization.draw_geometries([inlier_cloud]) 
 o3d.visualization.draw_geometries([outlier_cloud]) 
 pcd = outlier_cloud
-'''
+
 
 
 #Ahora segmentacion con DBSCAN
@@ -52,7 +44,7 @@ pcd = outlier_cloud
 with o3d.utility.VerbosityContextManager(
         o3d.utility.VerbosityLevel.Debug) as cm:
     labels = np.array(
-        pcd.cluster_dbscan(eps=5, min_points=50, print_progress=True)) # con imagenes donde objeto tiene depth parecido eps=0.0018 , y cuando no  eps=0.00309
+        pcd.cluster_dbscan(eps=1.74, min_points=20, print_progress=True)) # inclinado: 3.2, y min_p=50. 
 
 max_label = labels.max()
 print(f"point cloud has {max_label + 1} clusters")
@@ -103,7 +95,12 @@ elif(np.var(max_points2[:,2])<0.8*np.var(max_points[:,2]) ):
 else:
     pcd_final= max_pcd
 '''
-pcd_final= max_pcd
+if(np.var(max_points2[:,2])<np.var(max_points2[:,2])):
+    pcd_final=max2_pcd
+else:
+    pcd_final=max_pcd
+
+
 o3d.visualization.draw_geometries([pcd_final])
 
 min_bound= pcd_final.get_min_bound()
