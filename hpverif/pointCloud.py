@@ -13,26 +13,31 @@ class PointCloud:
     def createPointCloud (self, depthframe, filename):
 
 
-        
+      
+      
         
         os.makedirs(filename, exist_ok=True)
         
 
         # Load the depth frame as a 16-bit grayscale image
         depth_image = np.array(depthframe)
-        # Normalize the depth values between 0 and 255
-        
-        depth_frame_norm = cv2.normalize(depth_image, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
 
+        min =  np.min(depth_image)
+        max =  np.max(depth_image)
+        # Normalize the depth values between 0 and 255
+        print (depth_image[200][200])
+        depth_frame_norm = (((depth_image - min) / max)*1024)
+        print (depth_frame_norm [200][200])
         # Convert the depth frame to a color map
-        depth_colormap = cv2.applyColorMap(depth_frame_norm, cv2.COLORMAP_JET)
+        
 
         # Save the depth map as a PNG image
-        cv2.imwrite("./"+filename + "/"+filename+'.png', depth_colormap)
+        cv2.imwrite("./"+filename + "/"+filename+'.png', depth_frame_norm)
 
+        '''     
         depth_image = cv2.imread("./"+filename + "/"+filename+'.png',cv2.IMREAD_ANYDEPTH)
         print(depth_image)
-        hole_mask = depth_image == 14
+        hole_mask = depth_image == 0
         cv2.imwrite("./"+filename + "/"+filename+'_mask.png', hole_mask.astype(np.uint8)*255)
 
         # Apply the inpainting algorithm
@@ -40,14 +45,15 @@ class PointCloud:
 
         # Save the filled depth frame
         cv2.imwrite("./"+filename + "/"+filename+ '_filled.png', filled_depth)
-
+        '''
        #depth_image = filled_depth.astype(np.uint16)
         
         #depth_o3d = o3d.geometry.Image(depth_image)
 
        # print(depth_o3d)
-        depth_image = iio.imread("./"+filename + "/"+filename+ '_filled.png')
-        
+        depth_image = iio.imread("./"+filename + "/"+filename+ 'png')
+        print (depth_image[200][200])
+      
         '''
         # Create a depth image from the numpy array
 

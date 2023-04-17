@@ -9,7 +9,7 @@ import CenterAverage as ca
 
 
 
-pcd = o3d.io.read_point_cloud(".\gg_final\gg_final.ply")
+pcd = o3d.io.read_point_cloud("recording3/recording3.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
 #o3d.visualization.draw_geometries([pcd]) 
 
