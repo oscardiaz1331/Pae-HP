@@ -13,19 +13,21 @@ pcd = o3d.io.read_point_cloud(".\gg_recto\gg_recto.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
 #o3d.visualization.draw_geometries([pcd]) 
 
-pcd.remove_statistical_outlier(nb_neighbors=20, std_ratio=2.0)
+pcd.remove_statistical_outlier(nb_neighbors=10, std_ratio=2.0)
 #pcd.remove_radius_outlier(nb_points=16, radius=0.05) # esta eliminacion tarda mucho si la imagen tiene muchos puntos
 o3d.visualization.draw_geometries([pcd])   
 
 #Empezamos probando segmentacion por planos
 
-plane_model, inliers = pcd.segment_plane(distance_threshold=0.008, ransac_n=3,num_iterations=1000) #0.01
+plane_model, inliers = pcd.segment_plane(distance_threshold=0.006, ransac_n=3,num_iterations=1000) #0.01. El q funcionaba bien era 0.008
 inlier_cloud = pcd.select_by_index(inliers)
 inlier_cloud.paint_uniform_color([1.0, 0, 0])
 outlier_cloud = pcd.select_by_index(inliers, invert=True)     
 o3d.visualization.draw_geometries([inlier_cloud, outlier_cloud])  
 pcd = outlier_cloud
 
+depth_values_pared= np.asarray(inlier_cloud.points)[:,2] 
+print("mean: " + str(np.mean(depth_values_pared)))
 '''
 plane_model, inliers = pcd.segment_plane(distance_threshold=0.001, ransac_n=3,num_iterations=1000) #0.02
 inlier_cloud = pcd.select_by_index(inliers)

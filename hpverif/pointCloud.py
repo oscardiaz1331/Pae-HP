@@ -20,6 +20,7 @@ class PointCloud:
         # Load the depth frame as a 16-bit grayscale image
         depth_image = np.array(depthframe)
         # Normalize the depth values between 0 and 255
+        '''
         depth_frame_norm = cv2.normalize(depth_image, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
 
         # Convert the depth frame to a color map
@@ -40,6 +41,7 @@ class PointCloud:
         cv2.imwrite("./"+filename + "/"+filename+ '_filled.png', filled_depth)
 
         depth_image = filled_depth.astype(np.uint16)
+        '''
         depth_o3d = o3d.geometry.Image(depth_image)
 
         print(depth_o3d)
