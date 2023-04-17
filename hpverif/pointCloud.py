@@ -50,7 +50,8 @@ class PointCloud:
         
         '''
         # Create a depth image from the numpy array
-        intrinsic = o3d.camera.PinholeCameraIntrinsic(640, 480, 525, 525, 320, 240)
+
+        intrinsic = o3d.camera.PinholeCameraIntrinsic(640, 480, 616.962, 616.962, 329.215, 237.106)
         im = o3d.geometry.PointCloud.create_from_depth_image(depth_o3d,intrinsic)
         '''
         CX_DEPTH=322.282
