@@ -8,6 +8,14 @@ import pyrealsense2 as rs
 import CenterAverage as ca
 
 
+import verification  as v
+
+
+
+verif = v.Verification()
+dp,dc,p = verif.show_files(26,"prueba_estatica3.bag")
+
+min, max = verif.PointCloud(dp,"prueba_estatica3")
 
 pcd = o3d.io.read_point_cloud("prueba_estatica3/prueba_estatica3.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
@@ -26,6 +34,11 @@ outlier_cloud = pcd.select_by_index(inliers, invert=True)
 o3d.visualization.draw_geometries([inlier_cloud, outlier_cloud])  
 pcd = outlier_cloud
 
+depth_values_plane= np.asarray(inlier_cloud.points)[:,2] 
+depth_value_plane= ((np.mean(depth_values_plane)/255)*max)+min
+print("distancia pared final: " + str(depth_value_plane))
+
+
 # Podriamos mirar a partir de la inclinacion del plano cde la pared(que se detecta bien en todos los casos)para saber que aproach utilizar. Si estamos en caso de todo recto- dos segmentaciones de planos. Si caso inclinado 1 plano 1 dbscan
 
 plane_model, inliers = pcd.segment_plane(distance_threshold=2.8, ransac_n=3,num_iterations=1000) #2.8
@@ -37,6 +50,9 @@ o3d.visualization.draw_geometries([inlier_cloud])
 o3d.visualization.draw_geometries([outlier_cloud]) 
 pcd = outlier_cloud
 
+depth_values_plane= np.asarray(inlier_cloud.points)[:,2] 
+depth_value_plane= ((np.mean(depth_values_plane)/255)*max)+min
+print("distancia suelo/objeto: " + str(depth_value_plane))
 
 
 #Ahora segmentacion con DBSCAN
@@ -44,7 +60,7 @@ pcd = outlier_cloud
 with o3d.utility.VerbosityContextManager(
         o3d.utility.VerbosityLevel.Debug) as cm:
     labels = np.array(
-        pcd.cluster_dbscan(eps=1.74, min_points=20, print_progress=True)) # inclinado: 3.2, y min_p=50. 
+        pcd.cluster_dbscan(eps=3.2, min_points=20, print_progress=True)) # inclinado: 3.2, y min_p=50.     1.8
 
 max_label = labels.max()
 print(f"point cloud has {max_label + 1} clusters")
@@ -103,9 +119,14 @@ else:
 
 o3d.visualization.draw_geometries([pcd_final])
 
-min_bound= pcd_final.get_min_bound()
-depth_values= np.asarray(pcd_final.points)[:,2] 
-print("mean: " + str(np.mean(depth_values)))
+depth_values_obj= np.asarray(pcd_final.points)[:,2] 
+depth_value_plane= ((np.mean(depth_values_obj)/255)*max)+min
+print("distancia objeto inclinado: " + str(depth_value_plane))
+
+
+
+#(media/255)*max+min
+
 '''
 #esta transformacion teniendo en cuenta pos y angulo de la camara la podriamos hacer al principio, tambien hay que mirar si av distance se puede hacer directamente o hay q hacerlo sobre pcd inicial
 # Define camera position and orientation in real world coordinates
