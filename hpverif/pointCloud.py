@@ -54,11 +54,11 @@ class PointCloud:
         intrinsic = o3d.camera.PinholeCameraIntrinsic(640, 480, 616.962, 616.962, 329.215, 237.106)
         im = o3d.geometry.PointCloud.create_from_depth_image(depth_o3d,intrinsic)
         '''
-        CX_DEPTH=322.282
+        CX_DEPTH=322.282 # 322.282
         CY_DEPTH = 322.282
 
-        FX_DEPTH=320.818
-        FY_DEPTH=178.779
+        FX_DEPTH=320.818 #320.818
+        FY_DEPTH=178.779 #178.779
 
         pcd = []
         height, width = depth_image.shape

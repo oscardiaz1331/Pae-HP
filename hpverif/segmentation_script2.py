@@ -9,7 +9,7 @@ import CenterAverage as ca
 
 
 
-pcd = o3d.io.read_point_cloud(".\gg_recto\gg_recto.ply")
+pcd = o3d.io.read_point_cloud(".\gg_final\gg_final.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
 #o3d.visualization.draw_geometries([pcd]) 
 
@@ -19,7 +19,7 @@ o3d.visualization.draw_geometries([pcd])
 
 #Empezamos probando segmentacion por planos
 
-plane_model, inliers = pcd.segment_plane(distance_threshold=0.006, ransac_n=3,num_iterations=1000) #0.01. El q funcionaba bien era 0.008
+plane_model, inliers = pcd.segment_plane(distance_threshold=3, ransac_n=3,num_iterations=1000) #0.01. El q funcionaba bien era 0.008
 inlier_cloud = pcd.select_by_index(inliers)
 inlier_cloud.paint_uniform_color([1.0, 0, 0])
 outlier_cloud = pcd.select_by_index(inliers, invert=True)     
@@ -28,6 +28,13 @@ pcd = outlier_cloud
 
 depth_values_pared= np.asarray(inlier_cloud.points)[:,2] 
 print("mean: " + str(np.mean(depth_values_pared)))
+
+depth_values_pared2= np.asarray(inlier_cloud.points)[:,1] 
+print("mean: " + str(np.mean(depth_values_pared2)))
+
+depth_values_pared3= np.asarray(inlier_cloud.points)[:,0] 
+print("mean: " + str(np.mean(depth_values_pared3)))
+
 '''
 plane_model, inliers = pcd.segment_plane(distance_threshold=0.001, ransac_n=3,num_iterations=1000) #0.02
 inlier_cloud = pcd.select_by_index(inliers)
@@ -45,7 +52,7 @@ pcd = outlier_cloud
 with o3d.utility.VerbosityContextManager(
         o3d.utility.VerbosityLevel.Debug) as cm:
     labels = np.array(
-        pcd.cluster_dbscan(eps=0.0018, min_points=50, print_progress=True)) # con imagenes donde objeto tiene depth parecido eps=0.0018 , y cuando no  eps=0.00309
+        pcd.cluster_dbscan(eps=5, min_points=50, print_progress=True)) # con imagenes donde objeto tiene depth parecido eps=0.0018 , y cuando no  eps=0.00309
 
 max_label = labels.max()
 print(f"point cloud has {max_label + 1} clusters")
