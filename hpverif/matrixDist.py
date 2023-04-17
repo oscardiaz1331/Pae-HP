@@ -30,7 +30,7 @@ class MatrixDiagnose:
                             to_change.append((width, height))
                             self.total = self.total +1
                             #print(width,height)
-                        matrizDist[width][height]=depth_frame.get_distance(width,height)*100
+                        matrizDist[width][height]=depth_frame.get_distance(width,height)
 
             return matrizDist
             a = {}     
