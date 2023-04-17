@@ -107,3 +107,4 @@ class Segmentation:
 
         depth_values_obj= np.asarray(pcd_final.points)[:,2] 
         depth_value_plane= ((np.mean(depth_values_obj)/255)*self.max)+self.min
+        print(depth_value_plane)
