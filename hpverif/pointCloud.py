@@ -34,7 +34,7 @@ class PointCloud:
         # Save the depth map as a PNG image
         cv2.imwrite("./"+filename + "/"+filename+'.png', depth_frame_norm)
 
-        '''     
+        '''    
         depth_image = cv2.imread("./"+filename + "/"+filename+'.png',cv2.IMREAD_ANYDEPTH)
         print(depth_image)
         hole_mask = depth_image == 0
@@ -45,15 +45,15 @@ class PointCloud:
 
         # Save the filled depth frame
         cv2.imwrite("./"+filename + "/"+filename+ '_filled.png', filled_depth)
-        '''
+        
        #depth_image = filled_depth.astype(np.uint16)
         
         #depth_o3d = o3d.geometry.Image(depth_image)
-
+'''
        # print(depth_o3d)
         depth_image = iio.imread("./"+filename + "/"+filename+ '.png')
         print (depth_image[200][200])
-      
+        
         '''
         # Create a depth image from the numpy array
 
@@ -74,7 +74,10 @@ class PointCloud:
                 x = (j - CX_DEPTH) * z / FX_DEPTH
                 y = (i - CY_DEPTH) * z / FY_DEPTH
                 pcd.append([x, y, z])
-        
+                 
+        for i in range (200):
+             pcd.append([0,0,i])
+       
 
         pcd_o3d = o3d.geometry.PointCloud()  # create point cloud object
         pcd_o3d.points = o3d.utility.Vector3dVector(pcd)  # set pcd_np as the point cloud points
@@ -85,7 +88,7 @@ class PointCloud:
         #s = verif.matrixDiagn(dp)
 
         o3d.io.write_point_cloud("./"+filename + "/"+filename+".ply", pcd_o3d)
-
+        return min,max
 
 
 

@@ -3,7 +3,6 @@ from frameCapture import Frame_Capture
 from showFiles import Show_Files
 from frameCapturePLY import Frame_Capture_PLY
 from pointCloud import PointCloud
-from matrixDist import MatrixDiagnose
 from segmentation import Segmentation
 import numpy as np
 
@@ -39,7 +38,8 @@ class Verification:
     
     def PointCloud (self, dp, filename):
         pc = PointCloud()
-        pc.createPointCloud(0.001*np.asanyarray(dp.get_data()),filename)
+        return pc.createPointCloud(0.001*np.asanyarray(dp.get_data()),filename)
+        
     
     def Segmentation (self, filename ):
         seg = Segmentation(filename)
