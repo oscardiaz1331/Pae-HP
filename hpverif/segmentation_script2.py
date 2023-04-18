@@ -13,11 +13,11 @@ import verification  as v
 
 
 verif = v.Verification()
-dp,dc,p = verif.show_files(26,"prueba_estatica3.bag")
+dp,dc,p = verif.show_files(26,"gg_final2.bag")
 
-min, max = verif.PointCloud(dp,"prueba_estatica3")
+min, max = verif.PointCloud(dp,"gg_final2")
 
-pcd = o3d.io.read_point_cloud("prueba_estatica3/prueba_estatica3.ply")
+pcd = o3d.io.read_point_cloud("gg_final2/gg_final2.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
 #o3d.visualization.draw_geometries([pcd]) 
 
@@ -40,7 +40,7 @@ print("distancia pared final: " + str(depth_value_plane))
 
 
 # Podriamos mirar a partir de la inclinacion del plano cde la pared(que se detecta bien en todos los casos)para saber que aproach utilizar. Si estamos en caso de todo recto- dos segmentaciones de planos. Si caso inclinado 1 plano 1 dbscan
-
+#podriamos tambien ir girando el pointcloud para ir eliminando las paredes laterales
 plane_model, inliers = pcd.segment_plane(distance_threshold=2.8, ransac_n=3,num_iterations=1000) #2.8
 inlier_cloud = pcd.select_by_index(inliers)
 outlier_cloud = pcd.select_by_index(inliers, invert=True) 
@@ -60,7 +60,7 @@ print("distancia suelo/objeto: " + str(depth_value_plane))
 with o3d.utility.VerbosityContextManager(
         o3d.utility.VerbosityLevel.Debug) as cm:
     labels = np.array(
-        pcd.cluster_dbscan(eps=3.2, min_points=20, print_progress=True)) # inclinado: 3.2, y min_p=50.     1.8
+        pcd.cluster_dbscan(eps=3.2, min_points=50, print_progress=True)) # inclinado: 3.2, y min_p=50.     1.8
 
 max_label = labels.max()
 print(f"point cloud has {max_label + 1} clusters")
