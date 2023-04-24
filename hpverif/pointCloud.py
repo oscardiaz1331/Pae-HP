@@ -26,7 +26,7 @@ class PointCloud:
         max =  np.max(depth_image)
         # Normalize the depth values between 0 and 255
         print(height,width)
-        depth_frame_norm = (((depth_image - min) / max)*255)
+        depth_frame_norm = (((depth_image - min) / max)*1024) #225,2048,1024
         print (depth_image [320][400])
         # Convert the depth frame to a color map
         

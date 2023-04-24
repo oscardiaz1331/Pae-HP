@@ -13,11 +13,11 @@ import verification  as v
 
 
 verif = v.Verification()
-dp,dc,p = verif.show_files(26,"gg_final2.bag")
+dp,dc,p = verif.show_files(26,"prueba_1m.bag")
 
-min, max = verif.PointCloud(dp,"gg_final2")
+min, max = verif.PointCloud(dp,"prueba_1m")
 
-pcd = o3d.io.read_point_cloud("gg_final2/gg_final2.ply")
+pcd = o3d.io.read_point_cloud("prueba_1m/prueba_1m.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
 #o3d.visualization.draw_geometries([pcd]) 
 
@@ -27,7 +27,7 @@ o3d.visualization.draw_geometries([pcd])
 
 #Empezamos probando segmentacion por planos
 
-plane_model, inliers = pcd.segment_plane(distance_threshold=3.5, ransac_n=3,num_iterations=1000) #0.01. El q funcionaba bien era 0.008
+plane_model, inliers = pcd.segment_plane(distance_threshold=3, ransac_n=3,num_iterations=1000) #0.01. El q funcionaba bien era 0.008
 inlier_cloud = pcd.select_by_index(inliers)
 inlier_cloud.paint_uniform_color([1.0, 0, 0])
 outlier_cloud = pcd.select_by_index(inliers, invert=True)     
@@ -35,7 +35,7 @@ o3d.visualization.draw_geometries([inlier_cloud, outlier_cloud])
 pcd = outlier_cloud
 
 depth_values_plane= np.asarray(inlier_cloud.points)[:,2] 
-depth_value_plane= ((np.mean(depth_values_plane)/255)*max)+min
+depth_value_plane= ((np.mean(depth_values_plane)/1024)*max)+min
 print("distancia pared final: " + str(depth_value_plane))
 
 
@@ -51,7 +51,7 @@ o3d.visualization.draw_geometries([outlier_cloud])
 pcd = outlier_cloud
 
 depth_values_plane= np.asarray(inlier_cloud.points)[:,2] 
-depth_value_plane= ((np.mean(depth_values_plane)/255)*max)+min
+depth_value_plane= ((np.mean(depth_values_plane)/1024)*max)+min
 print("distancia suelo/objeto: " + str(depth_value_plane))
 
 
