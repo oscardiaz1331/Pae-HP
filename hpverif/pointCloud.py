@@ -24,9 +24,35 @@ class PointCloud:
         height, width = depth_image.shape
         min =  np.min(depth_image)
         max =  np.max(depth_image)
+        print("max:"+str(max) +"  min:"+ str(min))
+        depth_frame_norm=0
+        fact=0
         # Normalize the depth values between 0 and 255
         print(height,width)
-        depth_frame_norm = (((depth_image - min) / max)*1024) #225,2048,1024
+        '''
+        if((max-min)>=0.50 and (max-min)<0.60):
+
+            depth_frame_norm = (((depth_image - min) / max)*100) #225,2048,1024
+        if((max-min)>=0.60 and (max-min)<0.70):
+
+            depth_frame_norm = (((depth_image - min) / max)*100) #225,2048,1024    
+
+        if((max-min)>=0.70 and (max-min)<0.80):
+
+            depth_frame_norm = (((depth_image - min) / max)*120) #225,2048,1024
+
+        if((max-min)>=0.80 and (max-min)<1):
+
+            depth_frame_norm = (((depth_image - min) / max)*150) #225,2048,1024
+    '''
+        if((max-min)>=0.1 and (max-min)<1):
+
+            depth_frame_norm = (((depth_image - min) / max)*100) #225,2048,1024
+            fact = 100
+        if((max-min)>=1):
+
+            depth_frame_norm = (((depth_image - min) / max)*200) #225,2048,1024
+            fact = 200
         print (depth_image [320][400])
         # Convert the depth frame to a color map
         
@@ -99,7 +125,7 @@ class PointCloud:
         #s = verif.matrixDiagn(dp)
 
         o3d.io.write_point_cloud("./"+filename + "/"+filename+".ply", pcd_o3d)
-        return min,max
+        return min,max, fact
 
 
 

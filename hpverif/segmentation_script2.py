@@ -2,7 +2,7 @@ import numpy as np
 import open3d as o3d
 import matplotlib.pyplot as plt
 import cv2
-
+import math
 import verification as v
 import pyrealsense2 as rs
 import CenterAverage as ca
@@ -13,11 +13,11 @@ import verification  as v
 
 
 verif = v.Verification()
-dp,dc,p = verif.show_files(26,"prueba_1m.bag")
+dp,dc,p = verif.show_files(26,"prueba2m.bag")
 
-min, max = verif.PointCloud(dp,"prueba_1m")
+min, max, fact = verif.PointCloud(dp,"prueba2m")
 
-pcd = o3d.io.read_point_cloud("prueba_1m/prueba_1m.ply")
+pcd = o3d.io.read_point_cloud("prueba2m/prueba2m.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
 #o3d.visualization.draw_geometries([pcd]) 
 
@@ -27,7 +27,11 @@ o3d.visualization.draw_geometries([pcd])
 
 #Empezamos probando segmentacion por planos
 
-plane_model, inliers = pcd.segment_plane(distance_threshold=3, ransac_n=3,num_iterations=1000) #0.01. El q funcionaba bien era 0.008
+plane_model, inliers = pcd.segment_plane(distance_threshold=(((0.02 - min) / max)*fact), ransac_n=3,num_iterations=1000) #0.02. El q funcionaba bien era 0.008 #3
+[a, b, c, d] = plane_model
+print(f"Plane equation: {a:.2f}x + {b:.2f}y + {c:.2f}z + {d:.2f} = 0")
+theta = (math.acos(abs(c) / math.sqrt(a**2 + b**2 + c**2)))*180/math.pi
+print(f"theta:{theta:.2f}")
 inlier_cloud = pcd.select_by_index(inliers)
 inlier_cloud.paint_uniform_color([1.0, 0, 0])
 outlier_cloud = pcd.select_by_index(inliers, invert=True)     
@@ -35,13 +39,19 @@ o3d.visualization.draw_geometries([inlier_cloud, outlier_cloud])
 pcd = outlier_cloud
 
 depth_values_plane= np.asarray(inlier_cloud.points)[:,2] 
-depth_value_plane= ((np.mean(depth_values_plane)/1024)*max)+min
+depth_value_plane= ((np.mean(depth_values_plane)/fact)*max)+min
 print("distancia pared final: " + str(depth_value_plane))
+
+
+
+
 
 
 # Podriamos mirar a partir de la inclinacion del plano cde la pared(que se detecta bien en todos los casos)para saber que aproach utilizar. Si estamos en caso de todo recto- dos segmentaciones de planos. Si caso inclinado 1 plano 1 dbscan
 #podriamos tambien ir girando el pointcloud para ir eliminando las paredes laterales
-plane_model, inliers = pcd.segment_plane(distance_threshold=2.8, ransac_n=3,num_iterations=1000) #2.8
+plane_model, inliers = pcd.segment_plane(distance_threshold=(((0.02 - min) / max)*fact), ransac_n=3,num_iterations=1000) #2.8
+[a, b, c, d] = plane_model
+print(f"Plane equation: {a:.2f}x + {b:.2f}y + {c:.2f}z + {d:.2f} = 0")
 inlier_cloud = pcd.select_by_index(inliers)
 outlier_cloud = pcd.select_by_index(inliers, invert=True) 
 inlier_cloud.paint_uniform_color([1.0, 0, 0])
@@ -60,7 +70,7 @@ print("distancia suelo/objeto: " + str(depth_value_plane))
 with o3d.utility.VerbosityContextManager(
         o3d.utility.VerbosityLevel.Debug) as cm:
     labels = np.array(
-        pcd.cluster_dbscan(eps=3.2, min_points=50, print_progress=True)) # inclinado: 3.2, y min_p=50.     1.8
+        pcd.cluster_dbscan(eps=(((0.0127 - min) / max)*fact), min_points=50, print_progress=True)) # inclinado: 3.2, y min_p=50.     1.8
 
 max_label = labels.max()
 print(f"point cloud has {max_label + 1} clusters")
@@ -120,7 +130,7 @@ else:
 o3d.visualization.draw_geometries([pcd_final])
 
 depth_values_obj= np.asarray(pcd_final.points)[:,2] 
-depth_value_plane= ((np.mean(depth_values_obj)/255)*max)+min
+depth_value_plane= ((np.mean(depth_values_obj)/fact)*max)+min
 print("distancia objeto inclinado: " + str(depth_value_plane))
 
 
