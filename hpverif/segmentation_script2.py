@@ -13,11 +13,11 @@ import verification  as v
 
 
 verif = v.Verification()
-dp,dc,p = verif.show_files(26,"prueba90cm.bag")
+dp,dc,p = verif.show_files(26,"prueba50cm.bag")
 
-min, max, fact = verif.PointCloud(dp,"prueba90cm")
+min, max, fact = verif.PointCloud(dp,"prueba50cm")
 
-pcd = o3d.io.read_point_cloud("prueba90cm/prueba90cm.ply")
+pcd = o3d.io.read_point_cloud("prueba50cm/prueba50cm.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
 #o3d.visualization.draw_geometries([pcd]) 
 
