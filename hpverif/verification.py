@@ -1,10 +1,12 @@
 from Calibraton import Calibration
-from frameCapture import Frame_Capture
-from showFiles import Show_Files
-from frameCapturePLY import Frame_Capture_PLY
-from pointCloud import PointCloud
-from segmentation import Segmentation
+from FrameCapture import Frame_Capture
+from ShowFiles import Show_Files
+from FrameCapturePLY import Frame_Capture_PLY
+from PointCloud import PointCloud
+from Segmentation import Segmentation
 import numpy as np
+import Theoretical_distance as dt
+
 
 class Verification:
     def __init__ (self):
@@ -36,13 +38,22 @@ class Verification:
       #  km = Kmeans()
        # km.CalculateKMeans(matrix, k)
     
-    def PointCloud (self, dp, filename):
+    def pointCloud (self, dp, filename):
         pc = PointCloud()
         return pc.createPointCloud(0.001*np.asanyarray(dp.get_data()),filename)
         
     
-    def Segmentation (self, filename, min, max ):
-        seg = Segmentation(filename,min,max)
-        seg.removeBackgorund()
-        seg.segmentation()
-        
+    def segmentation (self, filename, min, max , fact):
+        seg = Segmentation(filename,min,max,fact)
+        dist_pared, dist_obj_plane, theta=seg.removeBackgorund()
+        dist_obj_incline=0
+        if(theta>8):
+            dist_obj_incline= seg.segmentation()
+        return dist_pared,dist_obj_plane, dist_obj_incline
+    
+
+    def dist_teorica(self, mapa, point, angle_degrees, show):
+        d = dt.Theoretical_distance()
+        dist = d.theoric_distance(mapa, point, angle_degrees,show)
+        print("Distància teorica: " + str(dist))
+        return dist

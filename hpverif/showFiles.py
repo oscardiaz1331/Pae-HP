@@ -1,6 +1,5 @@
 import cv2                                # state of the art computer vision algorithms library
 import numpy as np                        # fundamental package for scientific computing
-import open3d as o3d
 import pyrealsense2 as rs  
 
 
