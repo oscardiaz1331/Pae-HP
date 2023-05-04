@@ -13,11 +13,11 @@ import verification  as v
 
 
 verif = v.Verification()
-dp,dc,p = verif.show_files(26,"prueba2m.bag")
+dp,dc,p = verif.show_files(26,"prueba_estatica3.bag")
 
-min, max, fact = verif.PointCloud(dp,"prueba2m")
+min, max, fact = verif.PointCloud(dp,"prueba_estatica3")
 
-pcd = o3d.io.read_point_cloud("prueba2m/prueba2m.ply")
+pcd = o3d.io.read_point_cloud("prueba_estatica3/prueba_estatica3.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
 #o3d.visualization.draw_geometries([pcd]) 
 
@@ -43,10 +43,28 @@ depth_value_plane= ((np.mean(depth_values_plane)/fact)*max)+min
 print("distancia pared final: " + str(depth_value_plane))
 
 
+plane_model, inliers = pcd.segment_plane(distance_threshold=(((0.015 - min) / max)*fact), ransac_n=3,num_iterations=1000) #2.8
+[a, b, c, d] = plane_model
+print(f"Plane equation: {a:.2f}x + {b:.2f}y + {c:.2f}z + {d:.2f} = 0")
+inlier_cloud = pcd.select_by_index(inliers)
+outlier_cloud = pcd.select_by_index(inliers, invert=True) 
+inlier_cloud.paint_uniform_color([1.0, 0, 0])
+outlier_cloud.paint_uniform_color([1.0, 0, 0])
+o3d.visualization.draw_geometries([inlier_cloud]) 
+o3d.visualization.draw_geometries([outlier_cloud]) 
+pcd = outlier_cloud
+
+depth_values_plane= np.asarray(inlier_cloud.points)[:,2] 
+depth_value_plane= ((np.mean(depth_values_plane)/fact)*max)+min
+if(theta < 8):
+    print("distancia segundo objeto plano/suelo: " + str(depth_value_plane))
+else:
+    print("distancia suelo: " + str(depth_value_plane))
+  
 
 
 
-
+'''
 # Podriamos mirar a partir de la inclinacion del plano cde la pared(que se detecta bien en todos los casos)para saber que aproach utilizar. Si estamos en caso de todo recto- dos segmentaciones de planos. Si caso inclinado 1 plano 1 dbscan
 #podriamos tambien ir girando el pointcloud para ir eliminando las paredes laterales
 plane_model, inliers = pcd.segment_plane(distance_threshold=(((0.02 - min) / max)*fact), ransac_n=3,num_iterations=1000) #2.8
@@ -63,75 +81,76 @@ pcd = outlier_cloud
 depth_values_plane= np.asarray(inlier_cloud.points)[:,2] 
 depth_value_plane= ((np.mean(depth_values_plane)/1024)*max)+min
 print("distancia suelo/objeto: " + str(depth_value_plane))
+'''
 
-
+if(theta>8): 
 #Ahora segmentacion con DBSCAN
 
-with o3d.utility.VerbosityContextManager(
-        o3d.utility.VerbosityLevel.Debug) as cm:
-    labels = np.array(
-        pcd.cluster_dbscan(eps=(((0.0127 - min) / max)*fact), min_points=50, print_progress=True)) # inclinado: 3.2, y min_p=50.     1.8
+    with o3d.utility.VerbosityContextManager(
+            o3d.utility.VerbosityLevel.Debug) as cm:
+        labels = np.array(
+            pcd.cluster_dbscan(eps=(((0.03 - min) / max)*fact), min_points=50, print_progress=True)) # inclinado: 3.2, y min_p=50.     1.8
 
-max_label = labels.max()
-print(f"point cloud has {max_label + 1} clusters")
-colors = plt.get_cmap("tab20")(labels / (max_label if max_label > 0 else 1))
-colors[labels < 0] = 0
-pcd.colors = o3d.utility.Vector3dVector(colors[:, :3])
-o3d.visualization.draw_geometries([pcd])
+    max_label = labels.max()
+    print(f"point cloud has {max_label + 1} clusters")
+    colors = plt.get_cmap("tab20")(labels / (max_label if max_label > 0 else 1))
+    colors[labels < 0] = 0
+    pcd.colors = o3d.utility.Vector3dVector(colors[:, :3])
+    o3d.visualization.draw_geometries([pcd])
 
 
  
-#Buscamos la region que nos interesa
-target_label= 0
-selected_indices = np.where(labels == target_label)[0]
-selected_pcd = pcd.select_by_index(selected_indices)
-max_pcd= selected_pcd
+    #Buscamos la region que nos interesa
+    target_label= 0
+    selected_indices = np.where(labels == target_label)[0]
+    selected_pcd = pcd.select_by_index(selected_indices)
+    max_pcd= selected_pcd
 
 
-for i in range(max_label):
-    target_label = i
-    if(target_label> 0):
-        selected_indices = np.where(labels == target_label)[0]
-        selected_pcd = pcd.select_by_index(selected_indices)
+    for i in range(max_label):
+        target_label = i
+        if(target_label> 0):
+            selected_indices = np.where(labels == target_label)[0]
+            selected_pcd = pcd.select_by_index(selected_indices)
 
-        if(i==1):
-            max2_pcd= selected_pcd
+            if(i==1):
+                max2_pcd= selected_pcd
         
-        if( len(selected_pcd.points) > len(max2_pcd.points) ):
-            max2_pcd = selected_pcd
+            if( len(selected_pcd.points) > len(max2_pcd.points) ):
+                max2_pcd = selected_pcd
 
-        if( len(selected_pcd.points)> len(max_pcd.points)):  # np.asarray(selected_pcd.points).size> np.asarray(max_pcd.points).size
-            max2_pcd = max_pcd
-            max_pcd= selected_pcd
+            if( len(selected_pcd.points)> len(max_pcd.points)):  # np.asarray(selected_pcd.points).size> np.asarray(max_pcd.points).size
+                max2_pcd = max_pcd
+                max_pcd= selected_pcd
             
-o3d.visualization.draw_geometries([max_pcd])
-o3d.visualization.draw_geometries([max2_pcd])
-max_points = np.asarray(max_pcd.points)
-max_points2 = np.asarray(max2_pcd.points)
+    o3d.visualization.draw_geometries([max_pcd])
+    o3d.visualization.draw_geometries([max2_pcd])
+    max_points = np.asarray(max_pcd.points)
+    max_points2 = np.asarray(max2_pcd.points)
 
-print("varianza:" + str(np.var(max_points2[:,2])))
+    print("varianza:" + str(np.var(max_points2[:,2])))
 
-print("varianza:" + str(np.var(max_points[:,2])))
+    print("varianza:" + str(np.var(max_points[:,2])))
 
-''' 
-if( (np.var(max_points[:,2]) <= np.var(max_points[:,2]) +1.2*np.var(max_points2[:,2]))):
-    pcd_final = max_pcd
-elif(np.var(max_points2[:,2])<0.8*np.var(max_points[:,2]) ):
-    pcd_final = max2_pcd
-else:
-    pcd_final= max_pcd
-'''
-if(np.var(max_points2[:,2])<np.var(max_points2[:,2])):
-    pcd_final=max2_pcd
-else:
-    pcd_final=max_pcd
+    ''' 
+    if( (np.var(max_points[:,2]) <= np.var(max_points[:,2]) +1.2*np.var(max_points2[:,2]))):
+        pcd_final = max_pcd
+    elif(np.var(max_points2[:,2])<0.8*np.var(max_points[:,2]) ):
+        pcd_final = max2_pcd
+    else:
+        pcd_final= max_pcd
+    '''
+    if(np.var(max_points2[:,2])<np.var(max_points2[:,2])):
+        pcd_final=max2_pcd
+    else:
+        pcd_final=max_pcd
 
 
-o3d.visualization.draw_geometries([pcd_final])
+    o3d.visualization.draw_geometries([pcd_final])
 
-depth_values_obj= np.asarray(pcd_final.points)[:,2] 
-depth_value_plane= ((np.mean(depth_values_obj)/fact)*max)+min
-print("distancia objeto inclinado: " + str(depth_value_plane))
+    depth_values_obj= np.asarray(pcd_final.points)[:,2] 
+    depth_value_plane= ((np.mean(depth_values_obj)/fact)*max)+min
+    print("distancia objeto inclinado: " + str(depth_value_plane))
 
 
 
