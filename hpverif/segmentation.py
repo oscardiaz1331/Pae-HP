@@ -17,9 +17,12 @@ class Segmentation:
         #pcd.remove_radius_outlier(nb_points=16, radius=0.05) # esta eliminacion tarda mucho si la imagen tiene muchos puntos
 
 
-    def PlaneSegmentation(self):
+    def planeSegmentation(self):
         
-        rest = 0.035 if (max-min) > 1 else 0.02
+        if ((self.max-self.min) > 1):
+            rest = 0.035 
+        else :
+            rest= 0.02
 
         plane_model, inliers = self.pcd.segment_plane(distance_threshold=(((rest - self.min) / self.max)*self.fact), ransac_n=3,num_iterations=1000) #0.02. El q funcionaba bien era 0.008 #3
         [a, b, c, d] = plane_model

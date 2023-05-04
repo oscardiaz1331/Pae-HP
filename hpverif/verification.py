@@ -45,7 +45,7 @@ class Verification:
     
     def segmentation (self, filename, min, max , fact):
         seg = Segmentation(filename,min,max,fact)
-        dist_pared, dist_obj_plane, theta=seg.removeBackgorund()
+        dist_pared, dist_obj_plane, theta=seg.planeSegmentation()
         dist_obj_incline=0
         if(theta>8):
             dist_obj_incline= seg.segmentation()

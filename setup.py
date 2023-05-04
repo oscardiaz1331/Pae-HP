@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='siteprintverif',
+    name='hpverif',
     packages=find_packages(include=['hpverif']),
     version='1.6.3',
     install_requires = [
@@ -10,9 +10,12 @@ setup(
     'opencv-python',
     'matplotlib',
     'scipy',
-    'sklearn'
+    'sklearn',
+    'open3d',
+    'imageio',
+    'ast'
     ],
-    description='Hp construction verification library PAE 2023',
+    description='Construction verification library PAE 2023',
     author='Telecos PAE 2023 Students',
     license='MIT',
 )
