@@ -11,11 +11,11 @@ import Verification as v
 
 
 verif = v.Verification()
-dp,dc,p = verif.show_files(26,"prueba_estatica3.bag")
+dp,dc,p = verif.show_files(26,"prueba90cm.bag")
 
-min, max, fact = verif.PointCloud(dp,"prueba_estatica3")
+min, max, fact = verif.PointCloud(dp,"prueba90cm")
 
-pcd = o3d.io.read_point_cloud("prueba_estatica3/prueba_estatica3.ply")
+pcd = o3d.io.read_point_cloud("prueba90cm/prueba90cm.ply")
 #pcd = pcd.voxel_down_sample(voxel_size=0.02)  #down sampling por si imagen muy compleja
 #o3d.visualization.draw_geometries([pcd]) 
 
@@ -24,8 +24,13 @@ pcd.remove_statistical_outlier(nb_neighbors=10, std_ratio=2.0)
 o3d.visualization.draw_geometries([pcd])   
 
 #Empezamos probando segmentacion por planos
+restr= 0
+if(max-min> 1):
+    rest = 0.035
+else:
+    rest = 0.02
 
-plane_model, inliers = pcd.segment_plane(distance_threshold=(((0.02 - min) / max)*fact), ransac_n=3,num_iterations=1000) #0.02. El q funcionaba bien era 0.008 #3
+plane_model, inliers = pcd.segment_plane(distance_threshold=(((rest - min) / max)*fact), ransac_n=3,num_iterations=1000) #0.02. El q funcionaba bien era 0.008 #3
 [a, b, c, d] = plane_model
 print(f"Plane equation: {a:.2f}x + {b:.2f}y + {c:.2f}z + {d:.2f} = 0")
 theta = (math.acos(abs(c) / math.sqrt(a**2 + b**2 + c**2)))*180/math.pi
