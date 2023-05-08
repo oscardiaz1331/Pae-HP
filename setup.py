@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 setup(
     name='hpverif',
     packages=find_packages(include=['hpverif']),
-    version='2.5.3',
+    version='2.5.4',
     install_requires = [
     'pyrealsense2',
     'numpy',

@@ -4,8 +4,8 @@ from .ShowFiles import Show_Files
 from .FrameCapturePLY import Frame_Capture_PLY
 from .PointCloud import PointCloud
 from .Segmentation import Segmentation
+from .Theoretical_distance import Theoretical_distance 
 import numpy as np
-from .Theoretical_distance import Theoretical_distance as dt
 
 
 class Verification:
@@ -53,7 +53,7 @@ class Verification:
     
 
     def dist_teorica(self, mapa, point, angle_degrees, show):
-        d = dt.Theoretical_distance()
+        d = Theoretical_distance()
         dist = d.theoric_distance(mapa, point, angle_degrees,show)
         print("Distància teorica: " + str(dist))
         return dist

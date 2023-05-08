@@ -18,3 +18,4 @@ print(dist2)
 print(dist3)
 
 
+dist = verif.dist_teorica('MapaProva', (150,100), 270, True)
