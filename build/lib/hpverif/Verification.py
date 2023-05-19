@@ -47,13 +47,13 @@ class Verification:
         seg = Segmentation(filename,min,max,fact)
         dist_pared, dist_obj_plane, segment=seg.planeSegmentation()
         dist_obj_incline=0
-        if(segment==1 and column==1):
+        if(segment==1) and column==1 :
             dist_obj_incline= seg.segmentation()
         return dist_pared,dist_obj_plane, dist_obj_incline
     
 
     def dist_teorica(self, mapa, point, angle_degrees, show):
         d = Theoretical_distance()
-        dist = d.theoric_distance(mapa, point, angle_degrees,show)
+        dist,col = d.theoric_distance(mapa, point, angle_degrees,show)
         print("Distància teorica: " + str(dist))
-        return dist
+        return dist,col

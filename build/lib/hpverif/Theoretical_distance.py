@@ -9,7 +9,7 @@ class Theoretical_distance:
         pass
 
     def theoric_distance(self, mapa, point, angle_degrees, show):
-        #Carreguem mapa
+         #Carreguem mapa
         lines = self.loadMap(mapa)
 
         # Definim posició i angles (graus)
@@ -51,13 +51,13 @@ class Theoretical_distance:
 
             if abs(distancia-d[i-1]) > 10: #Si hi ha salts de valors "grans" significa que la camara veu una columna
                 if not estam_veiem_columna: 
-                    print("entrem de la columna",i)
+                    #print("entrem de la columna",i)
                     index_columna_inici = i
                     estam_veiem_columna = True
                     hem_estat_columna = True
         
                 else:
-                    print("sortim de la columna",i)
+                    #print("sortim de la columna",i)
                     index_columna_final = i-1
                     estam_veiem_columna = False
 
@@ -77,6 +77,8 @@ class Theoretical_distance:
         plt.plot(angles,d)
         plt.xlabel("Degrees")
         plt.ylabel("Distancia")  
+        plt.xlim(-45,45)
+        plt.ylim(0, 300)
 
         #print(distancia_max,angles_distancia_max, index_max)
 
@@ -91,34 +93,43 @@ class Theoretical_distance:
 
         #--------------------< CALCUL DE LES DISTANCIES FINALS >--------------------
 
-        print("cares columna", cares_columna)
+        print("Faces the column:", cares_columna)
 
         if cares_columna == 0:
             if not veiem_cantonada: 
-                print("Veiem una paret")
+                print("Wall seen")
 
                 #Distancia mitja de la paret
                 dist = sum(d) / len(d)
 
             else:
-                print("Veiem cantonada (dues parets)")
+                print("Corner seen (2 walls)")
                 mean_1_np = np.mean(d[:index_max-1],dtype=np.float64)
                 mean_2_np = np.mean(d[index_max:],dtype=np.float64)
 
                 #Distacia mitja de les dues parets
-                dist = [mean_1_np, mean_2_np]
+
+                if index_max > len(scalar_angles)/2:
+                    dist = [mean_1_np, mean_2_np]
+                else:
+                    dist = [mean_2_np, mean_1_np]
+
 
         elif cares_columna == 1:
+            print("Column seen")
 
             mean_columna = np.mean(d[index_columna_inici:index_columna_final-1],dtype=np.float64)
             mean_paret_1 = np.mean(d[:index_columna_inici-1],dtype=np.float64)
             mean_paret_2 = np.mean(d[index_columna_final+1:],dtype=np.float64)
 
             #Distancia mitja de la de la columna i la dels dos trossos de paret
-            dist = [mean_columna, mean_paret_1, mean_paret_2]
+            if (len(scalar_angles) - index_columna_final > index_columna_inici):
+                dist = [mean_paret_2, mean_paret_1, mean_columna]
+            else:
+                dist = [mean_paret_1, mean_paret_2, mean_columna]
 
         elif cares_columna == 2:
-            print("Veiem columna amb dues cares")
+            print("2 faces of a column seen")
 
             mean_columna_a = np.mean(d[index_columna_inici:index_min_c-1],dtype=np.float64)
             mean_columna_b = np.mean(d[index_min_c:index_columna_final-1],dtype=np.float64)
@@ -126,8 +137,16 @@ class Theoretical_distance:
             mean_paret_2 = np.mean(d[index_columna_final+1:],dtype=np.float64)
 
             #Distancia mitja de les dues cares (a i b) de la columna i la dels dos trossos de paret
-            dist = [mean_columna_a,mean_columna_b, mean_paret_1, mean_paret_2]
-
+            if index_columna_inici > len(scalar_angles) - index_columna_final:
+                if index_min_c - index_columna_inici > index_columna_final - index_min_c:
+                    dist = [ mean_paret_1, mean_paret_2, mean_columna_a,mean_columna_b]
+                else: 
+                    dist = [ mean_paret_1, mean_paret_2, mean_columna_b,mean_columna_a]
+            else: 
+                if index_min_c - index_columna_inici > index_columna_final - index_min_c:
+                    dist = [ mean_paret_2, mean_paret_1, mean_columna_a,mean_columna_b]
+                else: 
+                    dist = [ mean_paret_2, mean_paret_1, mean_columna_b,mean_columna_a]          
 
 
 
@@ -145,7 +164,7 @@ class Theoretical_distance:
 
             #Mostrem distancia  
             #ax.plot([point[0],interseccio_paret[0]], [point[1],interseccio_paret[1]], 'g-', label=f'Central distance: {round(dist, 3)}' + ' cm.')
-            ax.scatter(point[0],point[1], label=f'Distance to object: {round(dist[0])}' + ' cm.', color='green', marker='o', s=30)
+            #ax.scatter(point[0],point[1], label=f'Distance to object: {round(dist[0])}' + ' cm.', color='green', marker='o', s=30)
 
             #Mostrem rang de visió de la càmara
             ax.plot([point[0],interseccio_paret_right[0]], [point[1],interseccio_paret_right[1]], 'r-', label=f'Field of view.')
@@ -166,8 +185,14 @@ class Theoretical_distance:
 
 
             plt.show()
+            self.print_distance(dist)
 
-        return dist
+        if cares_columna > 0:
+            columna = 1
+        else:
+            columna = 0
+
+        return dist, columna
     
     def line_intersection(self, line1, line2):
         x1, y1 = line1[0]
@@ -231,3 +256,14 @@ class Theoretical_distance:
                 closest_distance = distance
 
         return(closest_distance, closest_intersection_point)
+    
+    def print_distance(self,dist):
+        if isinstance(dist, float):
+            print("Distance to the wall: ",dist,"cm")
+        elif len(dist) == 2:
+            print("Distance to the most seen wall: ", dist[0],"cm", "\nDistance to the least seen wall: ", dist[1],"cm")
+        elif len(dist) == 3:
+            print("Distance to the most seen wall: ", dist[0],"cm", "\nDistance to the least seen wall: ", dist[1],"cm", "\nDistance to the column", dist[2],"cm")
+        elif len(dist) == 4:
+            print("Distance to the most seen wall: ", dist[0],"cm", "\nDistance to the least seen wall: ", dist[1],"cm", "\nDistance to the most seen face of the column: ", dist[2],"cm", "\nDistance to the least seen face of the column: ", dist[3],"cm")
+    

@@ -54,6 +54,6 @@ class Verification:
 
     def dist_teorica(self, mapa, point, angle_degrees, show):
         d = Theoretical_distance()
-        dist = d.theoric_distance(mapa, point, angle_degrees,show)
+        dist,col = d.theoric_distance(mapa, point, angle_degrees,show)
         print("Distància teorica: " + str(dist))
-        return dist
+        return dist,col
