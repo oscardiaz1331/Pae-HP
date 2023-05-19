@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import math
 import ast
 
@@ -24,6 +25,111 @@ class Theoretical_distance:
         FOV_right, interseccio_paret_right = self.distancia_propera(point, angle_degrees - angle_FOV, lines)
         FOV_left, interseccio_paret_left = self.distancia_propera(point, angle_degrees + angle_FOV, lines)
 
+        angles = array = np.arange(-angle_FOV, angle_FOV, 0.5)
+        scalar_angles = [math.radians(angle) for angle in angles]
+
+        d = []                          #Vector de distancies
+        interseccio_paret_aa = []       #Vector de les interseccions
+        distancia_max = 0               #inicialitzacio pel calcul de la distancia max
+        distancia_min_c = 1500          #inicialitzacio pel calcul de la distancia min
+        cares_columna = 0               #Indica el nombre de cares d'una columna que veu la camara
+        estam_veiem_columna = False     #boolean que indica si en quin moment s'esta observant la columna dintra de la iteracio 
+        index_columna_final = -1        #inicialitzacio per a la distancia de la columna
+        index_columna_inici = -1        #idem
+        index_min_c = 1500
+        hem_estat_columna = False
+
+        for i in range(len(scalar_angles)):
+            distancia, interseccio = self.distancia_propera(point, angle_degrees + angles[i], lines)
+            distancia = distancia*math.cos(scalar_angles[i])
+            #print(i,distancia, angles[i])
+            d.append(distancia)
+            interseccio_paret_aa.append(interseccio)
+            if distancia > distancia_max: #Guardem el valor i index de la distancia maxima i per tant, cantonada
+                index_max = i-1
+                distancia_max = distancia
+
+            if abs(distancia-d[i-1]) > 10: #Si hi ha salts de valors "grans" significa que la camara veu una columna
+                if not estam_veiem_columna: 
+                    print("entrem de la columna",i)
+                    index_columna_inici = i
+                    estam_veiem_columna = True
+                    hem_estat_columna = True
+        
+                else:
+                    print("sortim de la columna",i)
+                    index_columna_final = i-1
+                    estam_veiem_columna = False
+
+            if distancia < distancia_min_c and estam_veiem_columna: #Veiem la cantonada de la columna
+                index_min_c = i
+                distancia_min_c = distancia
+
+        #La columna es recte, per tant si el valor maxim esta al principi o al final, ja sabem que la camara no veu
+        #cap cantonada, en el cas que el maxim no coincideixi amb inici o final, sabem que hi haura una cantonada
+        #si hi ha cantonada sabem que la camara veu dues cares de la columna
+        if hem_estat_columna:
+            if abs(distancia_min_c-d[index_columna_inici]) < 0.01 or abs(distancia_min_c-d[index_columna_final]) < 0.01:
+                cares_columna = 1
+            else:
+                cares_columna = 2
+
+        plt.plot(angles,d)
+        plt.xlabel("Degrees")
+        plt.ylabel("Distancia")  
+
+        #print(distancia_max,angles_distancia_max, index_max)
+
+        
+        #La paret es recte, per tant si el valor maxim esta al principi o al final, ja sabem que no topem cap cantonada
+        #En el cas que el maxim no coincideixi amb inici o final, sabem que hi haura una cantonada
+
+        if(abs(distancia_max-d[0]) < 0.01 or abs(distancia_max-d[len(scalar_angles)-1]) < 0.01):
+            veiem_cantonada = False
+        else:
+            veiem_cantonada = True
+
+        #--------------------< CALCUL DE LES DISTANCIES FINALS >--------------------
+
+        print("cares columna", cares_columna)
+
+        if cares_columna == 0:
+            if not veiem_cantonada: 
+                print("Veiem una paret")
+
+                #Distancia mitja de la paret
+                dist = sum(d) / len(d)
+
+            else:
+                print("Veiem cantonada (dues parets)")
+                mean_1_np = np.mean(d[:index_max-1],dtype=np.float64)
+                mean_2_np = np.mean(d[index_max:],dtype=np.float64)
+
+                #Distacia mitja de les dues parets
+                dist = [mean_1_np, mean_2_np]
+
+        elif cares_columna == 1:
+
+            mean_columna = np.mean(d[index_columna_inici:index_columna_final-1],dtype=np.float64)
+            mean_paret_1 = np.mean(d[:index_columna_inici-1],dtype=np.float64)
+            mean_paret_2 = np.mean(d[index_columna_final+1:],dtype=np.float64)
+
+            #Distancia mitja de la de la columna i la dels dos trossos de paret
+            dist = [mean_columna, mean_paret_1, mean_paret_2]
+
+        elif cares_columna == 2:
+            print("Veiem columna amb dues cares")
+
+            mean_columna_a = np.mean(d[index_columna_inici:index_min_c-1],dtype=np.float64)
+            mean_columna_b = np.mean(d[index_min_c:index_columna_final-1],dtype=np.float64)
+            mean_paret_1 = np.mean(d[:index_columna_inici],dtype=np.float64)
+            mean_paret_2 = np.mean(d[index_columna_final+1:],dtype=np.float64)
+
+            #Distancia mitja de les dues cares (a i b) de la columna i la dels dos trossos de paret
+            dist = [mean_columna_a,mean_columna_b, mean_paret_1, mean_paret_2]
+
+
+
 
         #--------------------< REPRESENTACIÓ >--------------------
         if(show):
@@ -38,7 +144,8 @@ class Theoretical_distance:
                 ax.plot([x1, x2], [y1, y2], 'k-')
 
             #Mostrem distancia  
-            ax.plot([point[0],interseccio_paret[0]], [point[1],interseccio_paret[1]], 'g-', label=f'Central distance: {round(dist, 3)}' + ' cm.')
+            #ax.plot([point[0],interseccio_paret[0]], [point[1],interseccio_paret[1]], 'g-', label=f'Central distance: {round(dist, 3)}' + ' cm.')
+            ax.scatter(point[0],point[1], label=f'Distance to object: {round(dist[0])}' + ' cm.', color='green', marker='o', s=30)
 
             #Mostrem rang de visió de la càmara
             ax.plot([point[0],interseccio_paret_right[0]], [point[1],interseccio_paret_right[1]], 'r-', label=f'Field of view.')
@@ -54,7 +161,7 @@ class Theoretical_distance:
             plt.ylabel('Y Axis (cm)')
 
             #Establim valor de la distància teòrica
-            plt.text(interseccio_paret[0], interseccio_paret[1], f"{round(dist, 3)}" + " cm", ha='right', va='bottom')
+            #plt.text(interseccio_paret[0], interseccio_paret[1], f"{round(dist, 3)}" + " cm", ha='right', va='bottom')
             plt.text(point[0], point[1], f"{(point[0], point[1])}" + " cm  ", ha='right', va='bottom')
 
 

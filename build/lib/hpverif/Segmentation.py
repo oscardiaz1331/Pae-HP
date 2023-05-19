@@ -28,7 +28,7 @@ class Segmentation:
         [a, b, c, d] = plane_model
         print(f"Plane equation: {a:.2f}x + {b:.2f}y + {c:.2f}z + {d:.2f} = 0")
         theta = (math.acos(abs(c) / math.sqrt(a**2 + b**2 + c**2)))*180/math.pi
-        print(f"theta:{theta:.2f}")
+        print(f"Plane orientation:{theta:.2f}")
         inlier_cloud = self.pcd.select_by_index(inliers)
         inlier_cloud.paint_uniform_color([1.0, 0, 0])
         outlier_cloud = self.pcd.select_by_index(inliers, invert=True)     
@@ -37,7 +37,7 @@ class Segmentation:
 
         depth_values_plane= np.asarray(inlier_cloud.points)[:,2] 
         depth_value_plane= ((np.mean(depth_values_plane)/self.fact)*self.max)+self.min
-        print("distancia pared final: " + str(depth_value_plane))
+        print("Background Plane Distance: " + str(depth_value_plane))
 
 
         plane_model, inliers = self.pcd.segment_plane(distance_threshold=(((0.015 - self.min) / self.max)*self.fact), ransac_n=3,num_iterations=1000) #2.8
@@ -49,16 +49,21 @@ class Segmentation:
         outlier_cloud.paint_uniform_color([1.0, 0, 0])
         o3d.visualization.draw_geometries([inlier_cloud]) 
         o3d.visualization.draw_geometries([outlier_cloud]) 
-        pcd = outlier_cloud
+        self.pcd = outlier_cloud
 
-        depth_values_obj= np.asarray(inlier_cloud.points)[:,2] 
+        depth_values_obj= np.asarray(inlier_cloud.points)[:,2]
+        varianza = np.var(depth_values_obj)
+        print("Variance of second Detection: " +str(varianza))
+
+        segment = 0
         depth_value_obj= ((np.mean(depth_values_obj)/self.fact)*self.max)+self.min
-        if(theta < 8):
-            print("distancia segundo objeto plano/suelo: " + str(depth_value_obj))
+        if(varianza <100):
+            print("Distance to Object: " + str(depth_value_obj))
         else:
-            print("distancia suelo: " + str(depth_value_obj))
+            segment=1
+            print("DIstance to Floor " + str(depth_value_obj))
 
-        return depth_value_plane,depth_value_obj, theta
+        return depth_value_plane,depth_value_obj, segment
 
         
 
