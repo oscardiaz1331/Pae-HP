@@ -1,38 +1,36 @@
 # Pae-HP Library
-PAE (HP) Spring 22-23.
+PAE (HP) Primavera 22-23.
 
-###### ESTRUCTURA DE CARPETES ######
+###### ESTRUCTURA DE CARPETAS ######
 
-    Cada vegada que es crea una funció nova crear carpeta amb el nom de la funció 
+    Cada vez que se crea una función nueva, crear una carpeta nueva con el nombre de la función. 
 
     PAE-HP
         - calibrar_adquirir_datos
-            · Aqui van els fitxers en relació a -> calibrar_adquirir_datos
+            · Aqui van los ficheros en relación a -> calibrar_adquirir_datos
         - ejemplos
-            · Aqui van totes les proves i exemples
+            · Aqui van todas las pruebas y ejemplos.
 
 ###### ESQUEMA PRINCIPAL FUNCIONAMENT ######
 
-    1. CALIBRAR 
-       ANAR A LA POSICIÓ "HOME" (0,0)
-       
+    1. CALIBRAR       
     
     2. ADQUIRIR DATA
-        - CONVERTIR DATOS/FORMATEAR (si es necesario):
-       - POSICIÓ
-       - DISTANCIA
-       - ANGLES
+        - CONVERTIR/LEER DATOS:
+            - POSICIÓN
+            - DISTÁNCIA
+            - ANGULOS
 
-    3. PREPROCESSAT (IA) MILLORAR DETECCIÓ OBJECTES
+    3. PREPROCESADO (MEJORA DE DETECCIÓN DE OBJETOS)
 
-    4. DETECCIÓ COLUMNA/PARET
+    4. DETECCIÓN COLUMNAS/PAREDES
 
-    5. VALIDACIÓ DADES
+    5. VALIDACIÓN DATOS
 
-    6. PRESA DE DECISIONS  
+    6. TOMA DE DECISIONES
 
 
 ###### FORMAT EXPORT FRAMES I PLAYBACK ######
 
-    Els frames grabats es guarden en un fitxer .bag el qual ens permet reproduir-lo posteriorment
+    Los frames grabados se guardan en un fichero '.bag' el cual nos permite reproducirlo a posteriori.
     
